@@ -103,7 +103,7 @@ def add_p12_certification():
     if verbose:
         print 'start import p12'
         print '========================================='
-        subprocess.check_call('security list-keychains -s %s' % login_keychain, shell=True)
+        subprocess.check_call('security list-keychains' , shell=True)
     p12_file = json_config_data['p12_file_path']
     p12_pass = json_config_data['p12_password']
     if not os.path.exists(p12_file):
@@ -115,11 +115,13 @@ def add_p12_certification():
 
 
 def open_provision_file():
+
+    provision_file = json_config_data['provision_file_path']
     if verbose:
         print 'start import provision file'
-    provision_file = json_config_data['provision_file_path']
+        print 'provision_file path: %s' % provision_file
 
-    if os.path.exists(provision_file):
+    if not os.path.exists(provision_file):
         subprocess.check_call('open %s' % provision_file)
     else:
         print 'provision file not exist'
@@ -135,6 +137,8 @@ def main():
 
     if has_error:
         return
+    if verbose:
+        print 'unlock system ok'
 
     if not os.path.isdir(source):
         print '%s is not an existing directory' % source
