@@ -3,7 +3,7 @@
 
 'a utils file'
 
-import json
+import json, codecs
 
 
 def load_json_from_file(path, verbose=False):
@@ -18,5 +18,5 @@ def load_data_from_file(path, verbose=False):
     if verbose:
         print 'load file: %s' % path
 
-    with open(path) as data_file:
-        return data_file.read().decode('utf-8')
+    with codecs.open(path, 'w', "utf-8") as data_file:
+        return data_file.read()
