@@ -24,6 +24,7 @@ login_keychain = '~/Library/Keychains/login.keychain'
 parser = argparse.ArgumentParser(description='a script for build ios package')
 parser.add_argument('--password', dest='password', help='os password', required=True)
 parser.add_argument('--source', dest='source', help='ios source path', required=True)
+parser.add_argument('--name', dest='name', help='project name')
 parser.add_argument('--config', dest='config', help='ios config path', required=True)
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Print verbose logging.')
 
@@ -33,6 +34,7 @@ verbose = args.verbose or False
 config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
 password = args.password
+name = args.name
 
 json_config_data = None
 
@@ -126,6 +128,19 @@ def open_provision_file():
     else:
         print 'provision file not exist'
 
+'''
+xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
+-configuration Release -derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive
+'''
+def archive():
+    if not name:
+        global name
+        name = os.path.basename(source)
+    xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
+    subprocess.check_call('xcodebuild archive -workspace %s -scheme  %s -configuration Release '
+                          '-derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive | xcpretty' % (xcworkspace, name) , shell=True)
+    pass
+
 
 def main():
     has_error = False
@@ -169,7 +184,7 @@ def main():
     try:
         icon_make(verbose, app_icon, app_icon_dist)
     except Exception as e:
-        print 'icon make exception: %s' % e
+        print 'icon make exception: %s' % e.message
         has_error = True
 
     if has_error:
@@ -177,14 +192,14 @@ def main():
     try:
         launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose)
     except Exception as e:
-        print 'launch image exception: %s' % e
+        print 'launch image exception: %s' % e.message
 
     if has_error:
         return
     try:
         bundle_file.copy(image_resource, app_image_folder_dist, verbose)
     except Exception as e:
-        print 'bundle image copy exception: %s' % e
+        print 'bundle image copy exception: %s' % e.message
         has_error = True
 
     # update plist
@@ -193,7 +208,7 @@ def main():
     try:
         update_config.update_plist(json_config_data[plist_key], plist, verbose)
     except Exception as e:
-        print 'update plist fail: %s' % e
+        print 'update plist fail: %s' % e.message
         has_error = True
 
     # update header file
@@ -202,7 +217,7 @@ def main():
     try:
         update_config.update_header(json_config_data[header_key], config_header, verbose)
     except Exception as e:
-        print 'update header file fail: %s' % e
+        print 'update header file fail: %s' % e.message
         has_error = True
 
     if has_error:
@@ -210,7 +225,7 @@ def main():
     try:
         add_p12_certification()
     except Exception as e:
-        print 'add p12 certification exception: %s' % e
+        print 'add p12 certification exception: %s' % e.message
         has_error = True
 
     if has_error:
@@ -218,7 +233,15 @@ def main():
     try:
         open_provision_file()
     except Exception as e:
-        print 'open provision file exception: %s' % e
+        print 'open provision file exception: %s' % e.message
+        has_error = True
+
+    if has_error:
+        return
+    try:
+        archive()
+    except Exception as e:
+        print 'archive exception: %s' % e.message
         has_error = True
 
 if __name__ == '__main__':
