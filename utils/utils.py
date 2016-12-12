@@ -18,5 +18,5 @@ def load_data_from_file(path, verbose=False):
     if verbose:
         print 'load file: %s' % path
 
-    with codecs.open(path, 'w', "utf-8") as data_file:
+    with codecs.open(path, 'r', "utf-8") as data_file:
         return data_file.read()
