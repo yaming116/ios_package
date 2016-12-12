@@ -103,7 +103,7 @@ def add_p12_certification():
     if verbose:
         print 'start import p12'
         print '========================================='
-        subprocess.check_call('security list-keychains -s %s' % login_keychain, shell=True, stdout=subprocess.PIPE)
+        subprocess.check_call('security list-keychains -s %s' % login_keychain, shell=True)
     p12_file = json_config_data['p12_file_path']
     p12_pass = json_config_data['p12_password']
     if not os.path.exists(p12_file):
@@ -111,7 +111,7 @@ def add_p12_certification():
     if not p12_pass or len(p12_pass) == 0:
         raise ValueError('p12 password is null')
 
-    subprocess.check_call('security import %s -k %s -P %s -T /usr/bin/codesign' % (p12_file, login_keychain, p12_pass),  shell=True, stdout=subprocess.PIPE)
+    subprocess.check_call('security import %s -k %s -P %s -T /usr/bin/codesign' % (p12_file, login_keychain, p12_pass),  shell=True)
 
 
 def open_provision_file():
@@ -129,7 +129,7 @@ def main():
     has_error = False
     # unlock system
     try:
-        subprocess.check_call('security unlock-keychain -p %s %s' % ( password, login_keychain), shell=True, stdout=subprocess.PIPE)
+        subprocess.check_call('security unlock-keychain -p %s %s' % ( password, login_keychain), shell=True)
     except Exception as e:
         print 'unlock system error: %s' % e
 
