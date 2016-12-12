@@ -121,7 +121,7 @@ def open_provision_file():
         print 'start import provision file'
         print 'provision_file path: %s' % provision_file
 
-    if not os.path.exists(provision_file):
+    if os.path.exists(provision_file):
         subprocess.check_call('open %s' % provision_file)
     else:
         print 'provision file not exist'
