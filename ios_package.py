@@ -22,8 +22,8 @@ login_keychain = '~/Library/Keychains/login.keychain'
 
 
 parser = argparse.ArgumentParser(description='a script for build ios package')
-parser.add_argument('--password', dest='password', help='os password', required=True)
 parser.add_argument('--source', dest='source', help='ios source path', required=True)
+parser.add_argument('--password', dest='password', help='os password')
 parser.add_argument('--name', dest='name', help='project name')
 parser.add_argument('--config', dest='config', help='ios config path', required=True)
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Print verbose logging.')
@@ -65,6 +65,14 @@ config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
 def check_config():
     if verbose:
         print 'start check config'
+    # check password
+    if not len(password) > 0:
+        global password
+        password = os.getenv('os.password')
+
+        if not len(password) > 0:
+            raise ValueError('password is null')
+
 
     # check resourde
     for p in resource:
