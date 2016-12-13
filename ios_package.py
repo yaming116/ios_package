@@ -138,7 +138,7 @@ def archive():
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     subprocess.check_call('xcodebuild archive -workspace %s -scheme  %s -configuration Release '
-                          '-derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive | xcpretty' % (xcworkspace, name) , shell=True)
+                          '-derivedDataPath %s/build -archivePath  %s/build/Products/test.xcarchive | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace) , shell=True)
     pass
 
 
