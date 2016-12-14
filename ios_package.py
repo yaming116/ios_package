@@ -66,8 +66,8 @@ def check_config():
     if verbose:
         print 'start check config'
     # check password
+    global password
     if not len(password) > 0:
-        global password
         password = os.getenv('os.password')
 
         if not len(password) > 0:
@@ -141,8 +141,8 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 -configuration Release -derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive
 '''
 def archive():
+    global name
     if not name:
-        global name
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     subprocess.check_call('xcodebuild archive -workspace %s -scheme  %s -configuration Release '
