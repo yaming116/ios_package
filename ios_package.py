@@ -140,14 +140,19 @@ def open_provision_file():
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 -configuration Release -derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive
 '''
+
+
 def archive():
     global name
     if not name:
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
-    subprocess.check_call('xcodebuild archive -workspace %s -scheme  %s -configuration Release '
-                          '-derivedDataPath %s/build -archivePath  %s/build/Products/test.xcarchive | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace) , shell=True)
-    pass
+    command = 'xcodebuild archive -workspace %s -scheme  %s -configuration Release ' \
+              '-derivedDataPath %s/build -archivePath  %s/build/Products/test.xcarchive | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace)
+    if verbose:
+        print 'build xcworkspace: %s' % xcworkspace
+        print 'build command: %s' % command
+    subprocess.check_call(command, shell=True)
 
 
 def main():
