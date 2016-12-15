@@ -237,7 +237,7 @@ def main():
     if has_error:
         return
     try:
-        update_config.update_plist(json_config_data[plist_key], plist, verbose)
+        update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
         print 'update plist fail: %s' % e
         has_error = True
