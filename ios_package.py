@@ -59,7 +59,7 @@ app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets',
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
 
-plist = os.path.join(source, 'URConfigFiles', 'info.plist')
+plist = os.path.join(source, 'URConfigFiles', 'Info.plist')
 # 头文件
 config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
 
@@ -116,7 +116,7 @@ def pod_install():
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name)
 
-    subprocess.check_call('cd %s &ls -al & pod install' % xcworkspace, shell=True)
+    subprocess.check_call('cd %s && ls -al && pod install' % xcworkspace, shell=True)
 
 
 def add_p12_certification():
