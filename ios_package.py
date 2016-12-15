@@ -239,7 +239,7 @@ def main():
     try:
         update_config.update_plist(json_config_data[plist_key], plist, verbose)
     except Exception as e:
-        print 'update plist fail: %s' % e.message
+        print 'update plist fail: %s' % e
         has_error = True
 
     # update header file
