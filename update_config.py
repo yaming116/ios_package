@@ -35,7 +35,7 @@ def update_plist(update_json, plist_path, verbose, test):
             if test and plist_key == 'CFBundleDisplayName':
                 value = 'T-' + value
 
-            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' info.plist" % (plist_key, value)
+            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (plist_key, value, plist_path)
             if verbose:
                 print '%s %s=%s' % (des, plist_key, value)
                 print 'command: %s' % command
