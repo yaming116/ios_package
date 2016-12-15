@@ -161,12 +161,12 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 
 
 def archive():
-    uuid = check_dev()
+    uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     command = 'xcodebuild archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath  %s/build/Products/%s.xcarchive ' \
               'CODE_SIGN_IDENTITY="iPhone Distribution: Hangzhou Bangtai Technology Co. Ltd."' \
-              'PROVISIONING_PROFILE=%s|xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace, name, uuid)
+              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace, name, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
