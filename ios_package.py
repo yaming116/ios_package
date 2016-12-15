@@ -3,6 +3,7 @@
 import argparse
 import os
 import subprocess
+import time
 
 import bundle_file_copy as bundle_file
 import launch_image_make
@@ -39,6 +40,7 @@ password = args.password
 name = args.name
 
 json_config_data = None
+export_archive = None
 
 if verbose:
     print 'ios config path %s' % config
@@ -54,6 +56,7 @@ image_resource = os.path.join(config, 'ImageResources')
 resource = {config_json, app_icon}
 
 app_icon_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'AppIcon.appiconset')
+ipa_dist = os.path.join(source, 'URConfigFiles', 'IPA')
 app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
@@ -154,6 +157,12 @@ def check_dev():
     command = '/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % provision_file
     return subprocess.check_output(command, shell=True)
 
+
+def get_provisioning_profile():
+    provision_file = json_config_data['provision_file_path']
+    command = '/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % provision_file
+    return subprocess.check_output(command, shell=True)
+
 '''
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 -configuration Release -derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive
@@ -163,14 +172,35 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 def archive():
     uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
+    global export_archive
+    export_archive = '%s/build/Products/%s.xcarchive ' % (xcworkspace, name)
     command = 'xcodebuild archive -workspace %s -scheme  %s -configuration Release ' \
-              '-derivedDataPath %s/build -archivePath  %s/build/Products/%s.xcarchive ' \
+              '-derivedDataPath %s/build -archivePath %s  ' \
               'CODE_SIGN_IDENTITY="iPhone Distribution: Hangzhou Bangtai Technology Co. Ltd."' \
-              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace, name, uuid)
+              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, xcworkspace, export_archive, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
     subprocess.check_call(command, shell=True)
+
+
+def export_ipa():
+    name = get_provisioning_profile()
+    localtime = time.localtime(time.time())
+    day = time.strftime("%Y-%m-%d", time.localtime())
+    id = int(time.mktime(localtime) / 1000)
+    ipa_name = '%s_%s.ipa' % (day, id)
+    p = os.path.join(ipa_dist, ipa_name)
+    command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
+              % (export_archive, p, name)
+
+    if verbose:
+        print 'command: %s' % command
+    subprocess.check_call(command, shell=True)
+
+    print '========================================'
+    print 'IPA path: %s' % p
+    print '========================================'
 
 
 def main():
@@ -282,6 +312,14 @@ def main():
     except Exception as e:
         print 'archive exception: %s' % e.message
         has_error = True
+
+    if has_error:
+        return
+    try:
+        export_ipa()
+    except Exception as e:
+        print 'export ipa exception: %s' % e.message
+
 
 if __name__ == '__main__':
     main()
