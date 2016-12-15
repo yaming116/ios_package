@@ -69,7 +69,7 @@ def check_config():
         print 'start check config'
     # check password
     global password
-    if not len(password) > 0:
+    if not password or not len(password) > 0:
         password = os.getenv('os.password')
 
         if not len(password) > 0:
