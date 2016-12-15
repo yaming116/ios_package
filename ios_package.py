@@ -116,7 +116,7 @@ def pod_install():
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name)
 
-    subprocess.check_call('cd %s & pod install' % xcworkspace, shell=True)
+    subprocess.check_call('cd %s &ls -al & pod install' % xcworkspace, shell=True)
 
 
 def add_p12_certification():
