@@ -185,7 +185,7 @@ def archive():
 
 
 def export_ipa():
-    name = get_provisioning_profile()
+    name = get_provisioning_profile().strip()
     localtime = time.localtime(time.time())
     day = time.strftime("%Y-%m-%d", time.localtime())
     id = int(time.mktime(localtime) / 1000)
