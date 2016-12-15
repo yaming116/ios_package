@@ -20,7 +20,7 @@ import codecs
 #     print "Not a plist:", e
 
 
-def update_plist(update_json, plist_path, verbose):
+def update_plist(update_json, plist_path, verbose, test):
     if verbose:
         print 'start update plist'
 
@@ -34,6 +34,8 @@ def update_plist(update_json, plist_path, verbose):
             plist_key = dic['plist_key']
             des = dic['des']
             value = dic['value']
+            if test and plist_key == 'CFBundleDisplayName':
+                value = 'T-' + value
 
             if verbose:
                 print '%s %s=%s' % (des, plist_key, value)
