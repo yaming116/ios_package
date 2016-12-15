@@ -4,7 +4,7 @@
 'update plist file and header file'
 
 
-from plistlib import *
+import subprocess
 import re
 import utils.utils as tools
 import codecs
@@ -27,8 +27,6 @@ def update_plist(update_json, plist_path, verbose, test):
     print 'update json value: \n %s' % update_json
 
     try:
-        plist = readPlist(plist_path)
-
         for dic in update_json:
 
             plist_key = dic['plist_key']
@@ -37,11 +35,11 @@ def update_plist(update_json, plist_path, verbose, test):
             if test and plist_key == 'CFBundleDisplayName':
                 value = 'T-' + value
 
+            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' info.plist" % (plist_key, value)
             if verbose:
                 print '%s %s=%s' % (des, plist_key, value)
-
-            plist[plist_key] = value
-        writePlist(plist, plist_path)
+                print 'command: %s' % command
+            subprocess.check_call(command, shell=True)
     except Exception as e:
         raise e
 
