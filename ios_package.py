@@ -26,11 +26,13 @@ parser.add_argument('--source', dest='source', help='ios source path', required=
 parser.add_argument('--password', dest='password', help='os password')
 parser.add_argument('--name', dest='name', help='project name')
 parser.add_argument('--config', dest='config', help='ios config path', required=True)
+parser.add_argument('-test', '--test', dest='test', action='store_true' , help='test ipa build')
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Print verbose logging.')
 
 args = parser.parse_args()
 
 verbose = args.verbose or False
+test = args.test or False
 config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
 password = args.password
@@ -108,6 +110,15 @@ def check_config():
         os.makedirs(app_image_folder_dist)
 
 
+def pod_install():
+    global name
+    if not name:
+        name = os.path.basename(source)
+    xcworkspace = os.path.join(source, name)
+
+    subprocess.check_call('cd %s & pod install' % xcworkspace, shell=True)
+
+
 def add_p12_certification():
 
     if verbose:
@@ -117,7 +128,8 @@ def add_p12_certification():
     p12_file = json_config_data['p12_file_path']
     p12_pass = json_config_data['p12_password']
     if not os.path.exists(p12_file):
-        raise ValueError('p12 file not exist')
+        print 'p12 file not exist'
+        return
     if not p12_pass or len(p12_pass) == 0:
         raise ValueError('p12 password is null')
 
@@ -134,7 +146,13 @@ def open_provision_file():
     if os.path.exists(provision_file):
         subprocess.check_call('open %s' % provision_file,  shell=True)
     else:
-        print 'provision file not exist'
+        raise ValueError('provision file not exist')
+
+
+def check_dev():
+    provision_file = json_config_data['provision_file_path']
+    command = '/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % provision_file
+    return subprocess.check_output(command, shell=True)
 
 '''
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
@@ -143,12 +161,12 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 
 
 def archive():
-    global name
-    if not name:
-        name = os.path.basename(source)
+    uuid = check_dev()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     command = 'xcodebuild archive -workspace %s -scheme  %s -configuration Release ' \
-              '-derivedDataPath %s/build -archivePath  %s/build/Products/test.xcarchive | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace)
+              '-derivedDataPath %s/build -archivePath  %s/build/Products/%s.xcarchive ' \
+              'CODE_SIGN_IDENTITY="iPhone Distribution: Hangzhou Bangtai Technology Co. Ltd."' \
+              'PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, xcworkspace, xcworkspace, name, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
@@ -231,6 +249,14 @@ def main():
         update_config.update_header(json_config_data[header_key], config_header, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
+        has_error = True
+
+    if has_error:
+        return
+    try:
+        pod_install()
+    except Exception as e:
+        print 'pod install exception: %s' % e.message
         has_error = True
 
     if has_error:
