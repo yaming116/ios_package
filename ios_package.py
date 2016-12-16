@@ -73,7 +73,7 @@ def check_config():
     # check password
     global password
     if password is None or not len(password) > 0:
-        password = os.getenv('os.password')
+        password = os.getenv('os_password')
 
         if password is None or not len(password) > 0:
             raise ValueError('password is null')
@@ -128,7 +128,7 @@ def pod_install():
 
 def get_project_pbxpproj():
     pbxproj = os.path.join(source, name, '%s.xcodeproj' % name, 'project.pbxproj')
-    if os.path.exists(pbxproj):
+    if not os.path.exists(pbxproj):
         raise ValueError('project.pbxproj not found: %s' % pbxproj)
     return pbxproj
 
