@@ -72,10 +72,10 @@ def check_config():
         print 'start check config'
     # check password
     global password
-    if not password or not len(password) > 0:
+    if password is None or not len(password) > 0:
         password = os.getenv('os.password')
 
-        if not len(password) > 0:
+        if password is None or not len(password) > 0:
             raise ValueError('password is null')
 
 
