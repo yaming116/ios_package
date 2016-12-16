@@ -71,9 +71,9 @@ def update_header(header_json , header_path, verbose):
 
 
 if __name__ == '__main__':
-    json = tools.load_json_from_file('./temp/config.json', True)
+    json = tools.load_json_from_file('../resource/config.json', True)
     # update_header(json['header_file_key'], './temp/URConfigHeader.h', True)
-    update_plist(json['plist'], './temp/info.plist', True)
+    update_plist(json['plist'], '../resource/info.plist', True)
 
 
 
