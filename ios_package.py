@@ -56,7 +56,7 @@ image_resource = os.path.join(config, 'ImageResources')
 resource = {config_json, app_icon}
 
 app_icon_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'AppIcon.appiconset')
-ipa_dist = os.path.join(config, 'URConfigFiles', 'IPA')
+ipa_dist = os.path.join(config , 'IPA')
 app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
@@ -113,7 +113,7 @@ def check_config():
         os.makedirs(app_image_folder_dist)
 
     # create ipa dir
-    if os.path.exists(ipa_dist):
+    if not os.path.exists(ipa_dist):
         os.makedirs(ipa_dist)
 
 
