@@ -171,15 +171,15 @@ def get_args_from_provision_file(key):
 
 
 def check_dev():
-    get_args_from_provision_file('UUID')
+    return get_args_from_provision_file('UUID')
 
 
 def get_provisioning_profile():
-    get_args_from_provision_file('Name')
+    return get_args_from_provision_file('Name')
 
 
 def get_team_name():
-    get_args_from_provision_file('TeamName')
+    return get_args_from_provision_file('TeamName')
 
 
 
