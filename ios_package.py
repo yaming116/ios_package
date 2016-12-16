@@ -10,6 +10,7 @@ import launch_image_make
 import update_config
 import utils.utils as tools
 from icon_make import make as icon_make
+import shutil
 
 'a script for build ios package'
 
@@ -163,16 +164,24 @@ def open_provision_file():
         raise ValueError('provision file not exist')
 
 
-def check_dev():
+def get_args_from_provision_file(key):
     provision_file = json_config_data['provision_file_path']
-    command = '/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % provision_file
+    command = '/usr/libexec/PlistBuddy -c "Print %s" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % (key, provision_file)
     return subprocess.check_output(command, shell=True)
+
+
+def check_dev():
+    get_args_from_provision_file('UUID')
 
 
 def get_provisioning_profile():
-    provision_file = json_config_data['provision_file_path']
-    command = '/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % provision_file
-    return subprocess.check_output(command, shell=True)
+    get_args_from_provision_file('Name')
+
+
+def get_team_name():
+    get_args_from_provision_file('TeamName')
+
+
 
 '''
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
@@ -185,11 +194,12 @@ def archive():
     uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     global export_archive
-    export_archive = '%s/build/Products/%s.xcarchive ' % (xcworkspace, name)
-    command = 'xcodebuild archive -workspace %s -scheme  %s -configuration Release ' \
+    export_archive = '%s/build/Products/%s.xcarchive ' % (config, name)
+    shutil.rmtree(os.path.join(config, 'build'))
+    command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="iPhone Distribution: Hangzhou Bangtai Technology Co. Ltd."' \
-              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, xcworkspace, export_archive, uuid)
+              'CODE_SIGN_IDENTITY="iPhone Distribution: %s"' \
+              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, config, export_archive, get_team_name(), uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
