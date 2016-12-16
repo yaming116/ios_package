@@ -55,7 +55,7 @@ def update_pbxproj(path, bundle_id, verbose):
         if verbose:
             print 'start update projdec.pbxproj file'
 
-        data = tools.load_data_from_file('', verbose)
+        data = tools.load_data_from_file(path, verbose)
 
         pattern = r'\bPRODUCT_BUNDLE_IDENTIFIER\b\s=\s[^"]{1}.*'
         value = r'bPRODUCT_BUNDLE_IDENTIFIER = %s; ' % bundle_id
