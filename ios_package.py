@@ -56,7 +56,7 @@ image_resource = os.path.join(config, 'ImageResources')
 resource = {config_json, app_icon}
 
 app_icon_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'AppIcon.appiconset')
-ipa_dist = os.path.join(source, 'URConfigFiles', 'IPA')
+ipa_dist = os.path.join(config, 'URConfigFiles', 'IPA')
 app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
@@ -112,6 +112,10 @@ def check_config():
     else:
         os.makedirs(app_image_folder_dist)
 
+    # create ipa dir
+    if os.path.exists(ipa_dist):
+        os.makedirs(ipa_dist)
+
 
 def pod_install():
     global name
@@ -120,6 +124,13 @@ def pod_install():
     xcworkspace = os.path.join(source, name)
 
     subprocess.check_call('cd %s && ls -al && pod install' % xcworkspace, shell=True)
+
+
+def get_project_pbxpproj():
+    pbxproj = os.path.join(source, name, '%s.xcodeproj' % name, 'project.pbxproj')
+    if os.path.exists(pbxproj):
+        raise ValueError('project.pbxproj not found: %s' % pbxproj)
+    return pbxproj
 
 
 def add_p12_certification():
@@ -169,6 +180,7 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 '''
 
 
+
 def archive():
     uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
@@ -199,7 +211,7 @@ def export_ipa():
     subprocess.check_call(command, shell=True)
 
     print '========================================'
-    print 'IPA path: %s' % p
+    print 'app path: %s' % p
     print '========================================'
 
 
@@ -263,14 +275,24 @@ def main():
         print 'bundle image copy exception: %s' % e.message
         has_error = True
 
+    # pod install
+    if has_error:
+        return
+    try:
+        pod_install()
+    except Exception as e:
+        print 'pod install exception: %s' % e.message
+        has_error = True
+
     # update plist
     if has_error:
         return
     try:
-        update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
+        update_config.update_plist(json_config_data[plist_key], plist, get_project_pbxpproj(),  verbose, test)
     except Exception as e:
         print 'update plist fail: %s' % e
         has_error = True
+
 
     # update header file
     if has_error:
@@ -283,14 +305,7 @@ def main():
 
     if has_error:
         return
-    try:
-        pod_install()
-    except Exception as e:
-        print 'pod install exception: %s' % e.message
-        has_error = True
 
-    if has_error:
-        return
     try:
         add_p12_certification()
     except Exception as e:

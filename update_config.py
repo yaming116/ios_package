@@ -20,7 +20,7 @@ import codecs
 #     print "Not a plist:", e
 
 
-def update_plist(update_json, plist_path, verbose, test):
+def update_plist(update_json, plist_path, pbxpproj, verbose, test):
     if verbose:
         print 'start update plist'
 
@@ -39,11 +39,37 @@ def update_plist(update_json, plist_path, verbose, test):
             if test and plist_key == 'CFBundleDisplayName':
                 value = 'T-' + value
 
+            if plist_key == 'CFBundleIdentifier':
+                update_pbxproj(pbxpproj, value, verbose)
+
             command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (plist_key, value, plist_path)
             if verbose:
                 print 'command: %s' % command
             subprocess.check_call(command, shell=True)
     except Exception as e:
+        raise e
+
+
+def update_pbxproj(path, bundle_id, verbose):
+    try:
+        if verbose:
+            print 'start update projdec.pbxproj file'
+
+        data = tools.load_data_from_file('', verbose)
+
+        pattern = r'\bPRODUCT_BUNDLE_IDENTIFIER\b\s=\s[^"]{1}.*'
+        value = r'bPRODUCT_BUNDLE_IDENTIFIER = %s; ' % bundle_id
+
+        data = re.sub(pattern , value % bundle_id, data)
+
+        with codecs.open(path, 'w', "utf-8") as header_file:
+            header_file.write(data)
+
+        if verbose:
+            print 'projdec.pbxproj file result \n %s' % data
+
+    except Exception as e:
+        print 'update projdec.pbxproj error'
         raise e
 
 
