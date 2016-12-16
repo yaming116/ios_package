@@ -53,5 +53,5 @@ def make(verbose, app_icon, app_icon_dist):
     if verbose:
         print "image json content: %s" % json_content
 
-    with open(os.path.join(app_icon_dist, 'Content.json'), mode='w') as icon_content:
+    with open(os.path.join(app_icon_dist, 'Contents.json'), mode='w') as icon_content:
         icon_content.write(json_content)

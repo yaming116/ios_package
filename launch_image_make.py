@@ -50,5 +50,5 @@ def copy(launch_image_dir, app_launch_image_dist, verbose=False):
 
     if verbose:
         print "image json content: %s" % json_content
-    with open(path.join(app_launch_image_dist, 'Content.json'), mode='w') as icon_content:
+    with open(path.join(app_launch_image_dist, 'Contents.json'), mode='w') as icon_content:
         icon_content.write(json_content)
