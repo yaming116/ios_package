@@ -189,17 +189,22 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 '''
 
 
-
 def archive():
     uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     global export_archive
     export_archive = '%s/build/Products/%s.xcarchive ' % (config, name)
-    shutil.rmtree(os.path.join(config, 'build'))
+
+    if not test:
+        distribution = 'iPhone Distribution: %s' % get_team_name()
+    else:
+        distribution = 'iPhone Developer: %s' % get_team_name()
+
+    shutil.rmtree(os.path.join(config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="iPhone Distribution: %s"' \
-              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, config, export_archive, get_team_name(), uuid)
+              'CODE_SIGN_IDENTITY="%s"' \
+              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, config, export_archive, distribution, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
