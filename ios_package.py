@@ -67,18 +67,16 @@ plist = os.path.join(source, 'URConfigFiles', 'Info.plist')
 # 头文件
 config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
 
+if password is None or not len(password) > 0:
+    password = os.getenv('os_password')
+
+    if password is None or not len(password) > 0:
+        raise ValueError('password is null')
+
 
 def check_config():
     if verbose:
         print 'start check config'
-    # check password
-    global password
-    if password is None or not len(password) > 0:
-        password = os.getenv('os_password')
-
-        if password is None or not len(password) > 0:
-            raise ValueError('password is null')
-
 
     # check resourde
     for p in resource:
@@ -237,6 +235,7 @@ def main():
         subprocess.check_call('security unlock-keychain -p %s %s' % ( password, login_keychain), shell=True)
     except Exception as e:
         print 'unlock system error: %s' % e
+        has_error = True
 
     if has_error:
         return
