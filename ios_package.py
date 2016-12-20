@@ -41,6 +41,7 @@ password = args.password
 name = args.name
 
 json_config_data = None
+bundle_json_data = None
 export_archive = None
 
 if verbose:
@@ -64,6 +65,8 @@ app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
 
 plist = os.path.join(source, 'URConfigFiles', 'Info.plist')
+bundle_json = os.path.join(source, 'URConfigFiles', 'URConfigJSON.geojson')
+
 # 头文件
 config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
 
@@ -85,10 +88,18 @@ def check_config():
         else:
             if verbose:
                 print 'config: %s' % p
+    # load bundle json data
+    if os.path.exists(bundle_json):
+        bundle_data = tools.load_json_from_file(bundle_json)
+        global bundle_json_data
+        bundle_json_data = bundle_data['coordinates']
+    else:
+        if verbose:
+            print 'not found %s' % bundle_json
     # launch_image_make check
     launch_image_make.check_config(launch_image_dir)
     # check bundle image resource
-    bundle_file.check(image_resource, verbose)
+    bundle_file.check(bundle_json_data, image_resource, verbose)
 
     #clean app icon
     if os.path.exists(app_icon_dist):
@@ -213,7 +224,7 @@ def export_ipa():
     name = get_provisioning_profile().strip()
     localtime = time.localtime(time.time())
     day = time.strftime("%Y-%m-%d", time.localtime())
-    id = int(time.mktime(localtime) / 1000)
+    id = int(time.mktime(localtime) / 10)
     ipa_name = '%s_%s.ipa' % (day, id)
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
@@ -284,7 +295,7 @@ def main():
     if has_error:
         return
     try:
-        bundle_file.copy(image_resource, app_image_folder_dist, verbose)
+        bundle_file.copy(bundle_json_data, image_resource, app_image_folder_dist, verbose)
     except Exception as e:
         print 'bundle image copy exception: %s' % e.message
         has_error = True

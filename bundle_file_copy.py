@@ -6,26 +6,26 @@
 import os.path as path
 import shutil
 
-image_list = ['ur_logo_icon.png',
-              'ur_cyclepic_default.png',
-              'urp_firstpage_slide1.png',
-              'urp_firstpage_slide2.png',
-              'urp_firstpage_slide3.png']
+image_list = ['ur_logo_icon.png']
 
 
-def check(image_resource, verbose):
+def check(bundle_json, image_resource, verbose):
     if verbose:
         print 'start check bundle image file'
-
-    for image in image_list:
+    if not bundle_json:
+        bundle_json = image_list
+    for image in bundle_json:
         p = path.join(image_resource, image)
         if not (path.exists(p)):
             raise ValueError('image not exist: %s' % p)
 
 
-def copy(image_resource, app_image_folder_dist, verbose):
+def copy(bundle_json, image_resource, app_image_folder_dist, verbose):
     if verbose:
         print 'start bundle image copy'
-    for image in image_list:
+
+    if not bundle_json:
+        bundle_json = image_list
+    for image in bundle_json:
         p = path.join(image_resource, image)
         shutil.copy(p, app_image_folder_dist)
