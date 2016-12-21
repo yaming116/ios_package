@@ -40,7 +40,7 @@ source = os.path.abspath(args.source)
 password = args.password
 name = args.name
 
-config = os.path.join(parent_config, 'URConfigFiles')
+config = os.path.join(parent_config, 'URPConfigFiles')
 
 json_config_data = None
 json_config_data_key = None
