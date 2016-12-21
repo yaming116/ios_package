@@ -330,7 +330,7 @@ def main():
         return
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
-                                       verbose, test)
+                                       verbose)
     except Exception as e:
         print 'update plist fail: %s' % e
         has_error = True
