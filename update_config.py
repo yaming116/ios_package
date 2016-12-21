@@ -8,6 +8,9 @@ import subprocess
 import re
 import utils.utils as tools
 import codecs
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 # try:
 #     plist = readPlist("./temp/info.plist")
 #
