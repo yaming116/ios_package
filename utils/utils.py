@@ -10,7 +10,7 @@ def load_json_from_file(path, verbose=False):
     if verbose:
         print 'load json file: %s' % path
     with open(path) as json_file:
-        data = json.load(json_file)
+        data = json.loads(load_data_from_file(path, verbose), encoding='utf-8')
         return data
 
 
