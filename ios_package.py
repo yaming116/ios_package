@@ -19,7 +19,7 @@ __author__ = 'sunshanming'
 
 appIconFileName = 'AppIcon60x60@3x.png'
 plist_key = 'plist'
-header_key = 'header_file_key'
+header_key = 'header'
 login_keychain = '~/Library/Keychains/login.keychain'
 
 
@@ -41,6 +41,7 @@ password = args.password
 name = args.name
 
 json_config_data = None
+json_config_data_key = None
 bundle_json_data = None
 export_archive = None
 
@@ -149,8 +150,8 @@ def add_p12_certification():
         print 'start import p12'
         print '========================================='
         subprocess.check_call('security list-keychains' , shell=True)
-    p12_file = json_config_data['p12_file_path']
-    p12_pass = json_config_data['p12_password']
+    p12_file = json_config_data['UR_P12_FILE']
+    p12_pass = json_config_data['UR_P12_PASSWORD']
     if not os.path.exists(p12_file):
         print 'p12 file not exist'
         return
@@ -162,7 +163,7 @@ def add_p12_certification():
 
 def open_provision_file():
 
-    provision_file = json_config_data['provision_file_path']
+    provision_file = json_config_data_key['UR_MOBILE_PROVISION_FILE']
     if verbose:
         print 'start import provision file'
         print 'provision_file path: %s' % provision_file
@@ -174,7 +175,7 @@ def open_provision_file():
 
 
 def get_args_from_provision_file(key):
-    provision_file = json_config_data['provision_file_path']
+    provision_file = json_config_data_key['UR_MOBILE_PROVISION_FILE']
     command = '/usr/libexec/PlistBuddy -c "Print %s" /dev/stdin <<< $(/usr/bin/security cms -D -i %s)' % (key, provision_file)
     return subprocess.check_output(command, shell=True)
 
@@ -235,7 +236,7 @@ def export_ipa():
     subprocess.check_call(command, shell=True)
 
     print '========================================'
-    print 'app path: %s' % p
+    print 'app_path: %s' % p
     print '========================================'
 
 
@@ -263,7 +264,12 @@ def main():
 
     try:
         global json_config_data
+        global json_config_data_key
         json_config_data = tools.load_json_from_file(config_json, verbose)
+        if test:
+            json_config_data_key = json_config_data['key_test']
+        else:
+            json_config_data_key = json_config_data['key']
     except Exception as e:
         print 'load json config fail: %s' % e
         has_error = True
@@ -313,11 +319,21 @@ def main():
     if has_error:
         return
     try:
-        update_config.update_plist(json_config_data[plist_key], plist, get_project_pbxpproj(),  verbose, test)
+        update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
         print 'update plist fail: %s' % e
         has_error = True
 
+    # update bundle id
+
+    if has_error:
+        return
+    try:
+        update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
+                                       verbose, test)
+    except Exception as e:
+        print 'update plist fail: %s' % e
+        has_error = True
 
     # update header file
     if has_error:

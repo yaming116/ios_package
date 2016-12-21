@@ -20,33 +20,40 @@ import codecs
 #     print "Not a plist:", e
 
 
-def update_plist(update_json, plist_path, pbxpproj, verbose, test):
+def update_plist(update_json, plist_path, verbose, test):
     if verbose:
         print 'start update plist'
 
     print 'update json value: \n %s' % update_json
 
     try:
-        for dic in update_json:
-
-            plist_key = dic['plist_key']
-            des = dic['des']
-            value = dic['value']
+        for key, value in update_json.items():
 
             if verbose:
-                print '%s %s=%s' % (des, plist_key, value)
+                print 'plist: %s=%s' % (key, value)
 
-            if test and plist_key == 'CFBundleDisplayName':
+            if test and key == 'CFBundleDisplayName':
                 value = 'T-' + value
 
-            if plist_key == 'CFBundleIdentifier':
-                update_pbxproj(pbxpproj, value, verbose)
-
-            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (plist_key, value, plist_path)
+            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
             if verbose:
                 print 'command: %s' % command
             subprocess.check_call(command, shell=True)
     except Exception as e:
+        raise e
+
+
+def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
+    try:
+
+        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('CFBundleIdentifier', bundle_id, plist_path)
+        if verbose:
+            print 'command: %s' % command
+        subprocess.check_call(command, shell=True)
+
+        update_pbxproj(pbxpproj, bundle_id, verbose)
+    except Exception as e:
+        print 'update bundle id error: %s' % e.message
         raise e
 
 
@@ -78,13 +85,13 @@ def update_header(header_json , header_path, verbose):
         data = tools.load_data_from_file(header_path, verbose)
 
         pattern = r'\bdefine\b\s\b%s\b.*'
-        value = r'define %s  %s'
+        store_value = r'define %s  %s'
 
-        for header in header_json:
-            header_key = header['header_key']
-            header_value = header['value']
+        for key, value in header_json.items():
+            header_key = key
+            header_value = value
 
-            data = re.sub(pattern % header_key, value % (header_key, header_value), data)
+            data = re.sub(pattern % header_key, store_value % (header_key, header_value), data)
 
         with codecs.open(header_path, 'w', "utf-8") as header_file:
             header_file.write(data)
@@ -97,9 +104,9 @@ def update_header(header_json , header_path, verbose):
 
 
 if __name__ == '__main__':
-    # json = tools.load_json_from_file('../resource/config.json', True)
-    # update_header(json['header_file_key'], './temp/URConfigHeader.h', True)
-    update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
+    json = tools.load_json_from_file('./temp/config.json', True)
+    update_header(json['header'], './temp/URConfigHeader.h', True)
+    # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
 
 
 
