@@ -35,10 +35,12 @@ args = parser.parse_args()
 
 verbose = args.verbose or False
 test = args.test or False
-config = os.path.abspath(args.config)
+parent_config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
 password = args.password
 name = args.name
+
+config = os.path.join(parent_config, 'URConfigFiles')
 
 json_config_data = None
 json_config_data_key = None
@@ -46,6 +48,7 @@ bundle_json_data = None
 export_archive = None
 
 if verbose:
+    print 'ios parent config path %s' % parent_config
     print 'ios config path %s' % config
     print 'ios source path %s' % source
 
