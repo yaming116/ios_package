@@ -250,20 +250,23 @@ def main():
         subprocess.check_call('security unlock-keychain -p %s %s' % ( password, login_keychain), shell=True)
     except Exception as e:
         print 'unlock system error: %s' % e
-        has_error = True
-
-    if has_error:
-        return
+        raise e
     if verbose:
         print 'unlock system ok'
 
     if not os.path.isdir(source):
         print '%s is not an existing directory' % source
-        return
+        raise ValueError('%s is not an existing directory' % source)
 
     if not os.path.isdir(config):
         print '%s is not an existing directory' % config
-        return
+        raise ValueError('%s is not an existing directory' % config)
+
+    try:
+        check_config()
+    except Exception as e:
+        print e
+        raise e
 
     try:
         global json_config_data
@@ -275,109 +278,80 @@ def main():
             json_config_data_key = json_config_data['key']
     except Exception as e:
         print 'load json config fail: %s' % e
-        has_error = True
+        raise e
 
-    if has_error:
-        return
-
-    try:
-        check_config()
-    except Exception as e:
-        print e;
-        has_error = True
-
-    if has_error:
-        return
     try:
         icon_make(verbose, app_icon, app_icon_dist)
     except Exception as e:
         print 'icon make exception: %s' % e.message
-        has_error = True
+        raise e
 
-    if has_error:
-        return
     try:
         launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose)
     except Exception as e:
         print 'launch image exception: %s' % e.message
+        raise e
 
-    if has_error:
-        return
+
     try:
         bundle_file.copy(bundle_json_data, image_resource, app_image_folder_dist, verbose)
     except Exception as e:
         print 'bundle image copy exception: %s' % e.message
-        has_error = True
+        raise e
 
     # pod install
-    if has_error:
-        return
     try:
         pod_install()
     except Exception as e:
         print 'pod install exception: %s' % e.message
-        has_error = True
+        raise e
 
     # update plist
-    if has_error:
-        return
     try:
         update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
         print 'update plist fail: %s' % e
-        has_error = True
+        raise e
 
     # update bundle id
-
-    if has_error:
-        return
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
     except Exception as e:
         print 'update plist fail: %s' % e
-        has_error = True
+        raise e
 
     # update header file
-    if has_error:
-        return
     try:
         update_config.update_header(json_config_data[header_key], config_header, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
-        has_error = True
-
-    if has_error:
-        return
+        raise e
 
     try:
         add_p12_certification()
     except Exception as e:
         print 'add p12 certification exception: %s' % e.message
-        has_error = True
+        raise e
 
-    if has_error:
-        return
+
     try:
         open_provision_file()
     except Exception as e:
         print 'open provision file exception: %s' % e.message
-        has_error = True
+        raise e
 
-    if has_error:
-        return
     try:
         archive()
     except Exception as e:
         print 'archive exception: %s' % e.message
-        has_error = True
+        raise e
 
-    if has_error:
-        return
     try:
         export_ipa()
     except Exception as e:
         print 'export ipa exception: %s' % e.message
+        raise e
 
 
 if __name__ == '__main__':
