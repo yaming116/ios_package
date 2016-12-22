@@ -88,13 +88,31 @@ def update_header(header_json , header_path, verbose):
         data = tools.load_data_from_file(header_path, verbose)
 
         pattern = r'\bdefine\b\s\b%s\b.*'
-        store_value = r'define %s  %s'
+        store_string_value = r'define %s @"%s"'
+        store_value = r'define %s %s'
+        store_object_value = r'define %s  @%s'
 
         for key, value in header_json.items():
             header_key = key
             header_value = value
 
-            data = re.sub(pattern % header_key, store_value % (header_key, header_value), data)
+            match = re.search(pattern % header_key, data)
+
+            if match:
+                result = match.group().split(' ')
+                v = result[-1]
+
+                if v.startswith('@"'):
+                    pattern_value = store_string_value
+                    print 'start @:'
+                elif v.startswith('@'):
+                    pattern_value = store_object_value
+                    print 'start @'
+                else:
+                    pattern_value = store_value
+                    print 'not found'
+
+            data = re.sub(pattern % header_key, pattern_value % (header_key, header_value), data)
 
         with codecs.open(header_path, 'w', "utf-8") as header_file:
             header_file.write(data)
@@ -108,7 +126,7 @@ def update_header(header_json , header_path, verbose):
 
 if __name__ == '__main__':
     json = tools.load_json_from_file('./temp/config.json', True)
-    update_header(json['header'], './temp/URConfigHeader.h', True)
+    update_header(json['header'], './temp/URConfigHeader.h', False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
 
 
