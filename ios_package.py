@@ -122,8 +122,9 @@ def check_config():
 
     # clean bundle image
     if os.path.exists(app_image_folder_dist):
-        for f in os.listdir(app_image_folder_dist):
-            os.remove(os.path.join(app_image_folder_dist, f))
+        # for f in os.listdir(app_image_folder_dist):
+        #     os.remove(os.path.join(app_image_folder_dist, f))
+        pass
     else:
         os.makedirs(app_image_folder_dist)
 
