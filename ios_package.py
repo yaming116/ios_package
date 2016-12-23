@@ -231,9 +231,9 @@ def export_ipa():
     day = time.strftime("%Y-%m-%d_%H:%M", time.localtime())
     id = int(time.mktime(localtime) / 10)
     if test:
-        ipa_name = '%s_%s_test_%s.apk' % (day, id, basename)
+        ipa_name = '%s_%s_test_%s.ipa' % (day, id, basename)
     else:
-        ipa_name = '%s_%s_%s.apk' % (day, id, basename)
+        ipa_name = '%s_%s_%s.ipa' % (day, id, basename)
 
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
