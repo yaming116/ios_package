@@ -29,19 +29,36 @@ def update_plist(update_json, plist_path, verbose, test):
 
     print 'update json value: \n %s' % update_json
 
+    displayName = update_json.get('CFBundleDisplayName')
+
+    if not displayName:
+        update_json['CFBundleDisplayName'] = update_json.get('CFBundleName')
+
     try:
         for key, value in update_json.items():
 
             if verbose:
                 print 'plist: %s=%s' % (key, value)
 
-            if test and key == 'CFBundleDisplayName':
-                value = 'T-' + value
+            if test and key == u'CFBundleName':
+                value = u'T-' + value
 
             command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
             if verbose:
                 print 'command: %s' % command
             subprocess.check_call(command, shell=True)
+        try:
+            key = u'NSAppTransportSecurity:NSAllowsArbitraryLoads'
+            if test:
+                value = u'1'
+            else:
+                value = u'0'
+            command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+            if verbose:
+                print 'command: %s' % command
+        except Exception as e1:
+            pass
+
     except Exception as e:
         raise e
 
@@ -80,7 +97,7 @@ def update_pbxproj(path, bundle_id, verbose):
         raise e
 
 
-def update_header(header_json , header_path, verbose):
+def update_header(header_json , header_path, test, verbose):
     try:
         if verbose:
             print 'start update header file'
@@ -113,6 +130,15 @@ def update_header(header_json , header_path, verbose):
                     print 'not found'
 
             data = re.sub(pattern % header_key, pattern_value % (header_key, header_value), data)
+
+        http_path = header_json.get('TEST_UR_HTTPURL', None)
+        if test:
+            if http_path and len(http_path) > 0:
+                key = u'UR_HTTPURL'
+                value = http_path
+                data = re.sub(pattern % key, r'%s = %s' % (key, value), data)
+            else:
+                raise ValueError('test http path not found')
 
         with codecs.open(header_path, 'w', "utf-8") as header_file:
             header_file.write(data)
