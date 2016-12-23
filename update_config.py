@@ -118,7 +118,7 @@ def update_header(header_json , header_path, verbose):
             header_file.write(data)
 
         if verbose:
-            print 'header file result \n %s' % data
+            print 'header file update success '
 
     except Exception as e:
         raise e
