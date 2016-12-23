@@ -39,6 +39,7 @@ parent_config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
 password = args.password
 name = args.name
+basename = os.path.basename(source)
 
 config = os.path.join(parent_config, 'URPConfigFiles')
 
@@ -206,18 +207,18 @@ def archive():
     uuid = check_dev().strip()
     xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
     global export_archive
-    export_archive = '%s/build/Products/%s.xcarchive ' % (config, name)
+    export_archive = '%s/build/Products/%s.xcarchive ' % (parent_config, name)
 
     if not test:
         distribution = 'iPhone Distribution: %s' % get_team_name()
     else:
         distribution = 'iPhone Developer: %s' % get_team_name()
 
-    shutil.rmtree(os.path.join(config, 'build'), True)
+    shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
               'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name,
-                                                                              config, export_archive, distribution, uuid)
+                                                                              parent_config, export_archive, distribution, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
@@ -227,9 +228,13 @@ def archive():
 def export_ipa():
     name = get_provisioning_profile().strip()
     localtime = time.localtime(time.time())
-    day = time.strftime("%Y-%m-%d", time.localtime())
+    day = time.strftime("%Y-%m-%d_%H:%M", time.localtime())
     id = int(time.mktime(localtime) / 10)
-    ipa_name = '%s_%s.ipa' % (day, id)
+    if test:
+        ipa_name = '%s_%s_test_%s.apk' % (day, id, basename)
+    else:
+        ipa_name = '%s_%s_%s.apk' % (day, id, basename)
+
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
               % (export_archive, p, name)
@@ -324,7 +329,7 @@ def main():
 
     # update header file
     try:
-        update_config.update_header(json_config_data[header_key], config_header, verbose)
+        update_config.update_header(json_config_data[header_key], config_header, test, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
         raise e
