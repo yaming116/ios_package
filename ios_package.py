@@ -249,6 +249,15 @@ def export_ipa():
     print '========================================'
 
 
+def tran_key_json(json_data):
+    result = {}
+    for key, value in json_data.items():
+        key = key.replace('_TEST', '')
+        result[key] = value
+
+    return result
+
+
 def main():
     has_error = False
     # unlock system
@@ -280,7 +289,7 @@ def main():
         global json_config_data_key
         json_config_data = tools.load_json_from_file(config_json, verbose)
         if test:
-            json_config_data_key = json_config_data['key_test']
+            json_config_data_key = tran_key_json(json_config_data['key_test'])
         else:
             json_config_data_key = json_config_data['key']
     except Exception as e:
