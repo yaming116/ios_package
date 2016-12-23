@@ -192,7 +192,7 @@ def get_provisioning_profile():
 
 
 def get_team_name():
-    return get_args_from_provision_file('TeamName')
+    return get_args_from_provision_file('TeamName').strip()
 
 
 
@@ -246,6 +246,7 @@ def export_ipa():
 def main():
     has_error = False
     # unlock system
+    # ~/Library/Keychains/login.keychain
     try:
         subprocess.check_call('security unlock-keychain -p %s %s' % ( password, login_keychain), shell=True)
     except Exception as e:
