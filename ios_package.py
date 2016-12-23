@@ -216,8 +216,8 @@ def archive():
     shutil.rmtree(os.path.join(config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="%s"' \
-              ' PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name, config, export_archive, distribution, uuid)
+              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name,
+                                                                              config, export_archive, distribution, uuid)
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
