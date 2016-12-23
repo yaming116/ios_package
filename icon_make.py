@@ -9,12 +9,16 @@ import subprocess
 
 ICON_NAME = 'icon_%sx%s.png'
 
-ico_list = [{'size': 29, 'multiple': 2, 'type': 'iphone'},
+ico_list = [{'size': 20, 'multiple': 2, 'type': 'iphone'},
+            {'size': 20, 'multiple': 3, 'type': 'iphone'},
+            {'size': 29, 'multiple': 2, 'type': 'iphone'},
             {'size': 29, 'multiple': 3, 'type': 'iphone'},
             {'size': 40, 'multiple': 2, 'type': 'iphone'},
             {'size': 40, 'multiple': 3, 'type': 'iphone'},
             {'size': 60, 'multiple': 2, 'type': 'iphone'},
             {'size': 60, 'multiple': 3, 'type': 'iphone'},
+            {'size': 20, 'multiple': 2, 'type': 'ipad'},
+            {'size': 20, 'multiple': 3, 'type': 'ipad'},
             {'size': 29, 'multiple': 1, 'type': 'ipad'},
             {'size': 29, 'multiple': 2, 'type': 'ipad'},
             {'size': 40, 'multiple': 1, 'type': 'ipad'},
