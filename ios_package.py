@@ -63,7 +63,7 @@ image_resource = os.path.join(config, 'ImageResources')
 resource = {config_json, app_icon}
 
 app_icon_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'AppIcon.appiconset')
-ipa_dist = os.path.join(config , 'IPA')
+ipa_dist = os.path.join(parent_config , 'IPA')
 app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
