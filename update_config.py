@@ -136,7 +136,7 @@ def update_header(header_json , header_path, test, verbose):
             if http_path and len(http_path) > 0:
                 key = u'UR_HTTPURL'
                 value = http_path
-                data = re.sub(pattern % key, r'%s = %s' % (key, value), data)
+                data = re.sub(pattern % key, store_string_value % (key, value), data)
             else:
                 raise ValueError('test http path not found')
 
@@ -152,7 +152,7 @@ def update_header(header_json , header_path, test, verbose):
 
 if __name__ == '__main__':
     json = tools.load_json_from_file('./temp/config.json', True)
-    update_header(json['header'], './temp/URConfigHeader.h', False)
+    update_header(json['header'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
 
 
