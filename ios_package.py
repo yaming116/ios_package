@@ -194,9 +194,12 @@ def get_provisioning_profile():
 
 
 def get_team_name():
-    return get_args_from_provision_file('TeamName').strip()
-
-
+    env = get_args_from_provision_file('Entitlements:aps-environment').strip()
+    team_name = get_args_from_provision_file('TeamName').strip()
+    if 'development' == env:
+        return 'iPhone Developer: %s' % team_name
+    else:
+        return 'iPhone Distribution: %s' % team_name
 
 '''
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
@@ -210,10 +213,7 @@ def archive():
     global export_archive
     export_archive = '%s/build/Products/%s.xcarchive ' % (parent_config, name)
 
-    if not test:
-        distribution = 'iPhone Distribution: %s' % get_team_name()
-    else:
-        distribution = 'iPhone Developer: %s' % get_team_name()
+    distribution =  get_team_name()
 
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
@@ -255,6 +255,8 @@ def tran_key_json(json_data):
         key = key.replace('_TEST', '')
         result[key] = value
 
+    if verbose:
+        print 'key data: %s' % json_data
     return result
 
 
