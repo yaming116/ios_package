@@ -190,7 +190,7 @@ def check_dev():
 
 
 def get_provisioning_profile():
-    return get_args_from_provision_file('Name')
+    return get_args_from_provision_file('Name').strip()
 
 
 def get_team_name():
@@ -218,8 +218,8 @@ def archive():
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s | xcpretty' % (xcworkspace, name,
-                                                                              parent_config, export_archive, distribution, uuid)
+              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s PROVISIONING_PROFILE_SPECIFIER=%s | xcpretty' % \
+              (xcworkspace, name, parent_config, export_archive, distribution, uuid, get_provisioning_profile())
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
@@ -227,7 +227,6 @@ def archive():
 
 
 def export_ipa():
-    name = get_provisioning_profile().strip()
     localtime = time.localtime(time.time())
     day = time.strftime("%Y-%m-%d_%H:%M", time.localtime())
     id = int(time.mktime(localtime) / 10)
@@ -238,7 +237,7 @@ def export_ipa():
 
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
-              % (export_archive, p, name)
+              % (export_archive, p, get_provisioning_profile())
 
     if verbose:
         print 'command: %s' % command
