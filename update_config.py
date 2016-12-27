@@ -50,9 +50,9 @@ def update_plist(update_json, plist_path, verbose, test):
         try:
             key = u'NSAppTransportSecurity:NSAllowsArbitraryLoads'
             if test:
-                value = u'1'
+                value = 1
             else:
-                value = u'0'
+                value = 0
             command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
             if verbose:
                 print 'command: %s' % command
@@ -88,6 +88,8 @@ def update_pbxproj(path, bundle_id, verbose):
         value = 'PRODUCT_BUNDLE_IDENTIFIER = %s; ' % bundle_id
 
         data = re.sub(pattern, value , data)
+
+
 
         with codecs.open(path, 'w', "utf-8") as header_file:
             header_file.write(data)
