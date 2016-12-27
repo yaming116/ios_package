@@ -203,7 +203,7 @@ def get_team_name():
 
 
 def get_team_identifier():
-    return get_provisioning_profile('Entitlements:com.apple.developer.team-identifier').strip()
+    return get_args_from_provision_file('Entitlements:com.apple.developer.team-identifier').strip()
 
 
 '''
