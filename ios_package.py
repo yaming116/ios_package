@@ -201,6 +201,11 @@ def get_team_name():
     else:
         return 'iPhone Distribution: %s' % team_name
 
+
+def get_team_identifier():
+    return get_provisioning_profile('Entitlements:com.apple.developer.team-identifier').strip()
+
+
 '''
 xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 -configuration Release -derivedDataPath ./build -archivePat h  ./build/Products/test.xcarchive
@@ -218,8 +223,9 @@ def archive():
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s PROVISIONING_PROFILE_SPECIFIER=%s | xcpretty' % \
-              (xcworkspace, name, parent_config, export_archive, distribution, uuid, get_provisioning_profile())
+              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=% | xcpretty' % \
+              (xcworkspace, name, parent_config, export_archive, distribution, uuid, get_provisioning_profile(),
+               get_team_identifier())
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
         print 'build command: %s' % command
