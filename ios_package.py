@@ -155,8 +155,8 @@ def add_p12_certification():
         print 'start import p12'
         print '========================================='
         subprocess.check_call('security list-keychains' , shell=True)
-    p12_file = json_config_data_key.get('UR_P12_FILE', None)
-    p12_pass = json_config_data_key.get('UR_P12_PASSWORD', None)
+    p12_file = json_config_data_key.get('UR_P12_FILE', '')
+    p12_pass = json_config_data_key.get('UR_P12_PASSWORD', '')
     if not os.path.exists(p12_file):
         print 'p12 file not exist'
         return
