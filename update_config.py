@@ -86,12 +86,15 @@ def update_pbxproj(path, bundle_id, verbose):
 
         data = tools.load_data_from_file(path, verbose)
 
+        # bundle id
         pattern = r'\bPRODUCT_BUNDLE_IDENTIFIER\b\s=\s[^"]{1}.*'
         value = 'PRODUCT_BUNDLE_IDENTIFIER = %s; ' % bundle_id
-
         data = re.sub(pattern, value , data)
 
-
+        # change device family
+        pattern = r'\bTARGETED_DEVICE_FAMILY\b\s=.*'
+        value = 'TARGETED_DEVICE_FAMILY = 1; '
+        data = re.sub(pattern, value, data)
 
         with codecs.open(path, 'w', "utf-8") as header_file:
             header_file.write(data)
@@ -156,7 +159,7 @@ def update_header(header_json , header_path, test, verbose):
 
 if __name__ == '__main__':
     json = tools.load_json_from_file('./temp/config.json', True)
-    update_header(json['header'], './temp/URConfigHeader.h', False,  False)
+    update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
 
 
