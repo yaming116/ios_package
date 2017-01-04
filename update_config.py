@@ -40,6 +40,10 @@ def update_plist(update_json, plist_path, verbose, test):
             if verbose:
                 print 'plist: %s=%s' % (key, value)
 
+            if not value or len(value) <= 0:
+                print 'value is null'
+                continue
+
             if test and key == u'CFBundleName':
                 value = u'T-' + value
 
@@ -96,6 +100,11 @@ def update_pbxproj(path, bundle_id, verbose):
         value = 'TARGETED_DEVICE_FAMILY = 1; '
         data = re.sub(pattern, value, data)
 
+        # change ProvisioningStyle 改成手动签名
+        pattern = r'\bProvisioningStyle\b\s=.*'
+        value = 'ProvisioningStyle = Manual; '
+        data = re.sub(pattern, value, data)
+
         with codecs.open(path, 'w', "utf-8") as header_file:
             header_file.write(data)
 
@@ -119,6 +128,10 @@ def update_header(header_json , header_path, test, verbose):
         for key, value in header_json.items():
             header_key = key
             header_value = value
+
+            if not value or len(value) <= 0:
+                print 'value is null'
+                continue
 
             match = re.search(pattern % header_key, data)
 
