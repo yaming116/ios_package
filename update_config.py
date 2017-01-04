@@ -57,8 +57,8 @@ def update_plist(update_json, plist_path, verbose, test):
                 value = 1
             else:
                 value = 0
-            subprocess.check_call(command, shell=True)
             command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+            subprocess.check_call(command, shell=True)
             if verbose:
                 print 'command: %s' % command
         except Exception as e1:
