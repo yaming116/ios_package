@@ -11,16 +11,6 @@ import codecs
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-# try:
-#     plist = readPlist("./temp/info.plist")
-#
-#     print plist
-#     print plist['CFBundleDisplayName']
-#     plist['CFBundleDisplayName'] = 'test'
-#
-#     writePlist(plist, "./temp/info.plist")
-# except Exception, e:
-#     print "Not a plist:", e
 
 
 def update_plist(update_json, plist_path, verbose, test):
@@ -66,6 +56,68 @@ def update_plist(update_json, plist_path, verbose, test):
             pass
 
     except Exception as e:
+        raise e
+
+
+def add_pay(update_json, plist_path, verbose):
+    if verbose:
+        print 'start update plist for pay'
+    if not update_json:
+        return
+    print 'update json value: \n %s' % update_json
+
+    try:
+        '''
+        /usr/libexec/PlistBuddy -c "Delete :CFBundleURLTypes"
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" info.plist
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0 dict" info.plist
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleTypeRole string Editor" info.plist
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLName string winxin" info.plist
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" info.plist
+        /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string wxa5ae17722e3472ae" info.plist
+        '''
+        command = '/usr/libexec/PlistBuddy -c "Delete :CFBundleURLTypes" %s' % plist_path
+        add_array = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" % '% plist_path
+        add_dict = '/usr/libexec/PlistBuddy -c "Add  :CFBundleURLTypes:%s dict" % '
+        add_role = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleTypeRole string Editor" %s'
+        add_url_name = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLName string %s" %s'
+        add_url_scheme = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes array" %s'
+        add_url_schemes = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes:%s string wxa5ae17722e3472ae" %s'
+        subprocess.check_call(command, shell=True)
+        if verbose:
+            print 'command: %s' % command
+        subprocess.check_call(add_array, shell=True)
+        if verbose:
+            print 'command: %s' % add_array
+        index = 0
+        for key, value in update_json.items():
+            command = add_dict % (index, plist_path)
+            subprocess.check_call(command, shell=True)
+            if verbose:
+                print 'command: %s' % command
+
+            command = add_role % (index, plist_path)
+            subprocess.check_call(command, shell=True)
+            if verbose:
+                print 'command: %s' % command
+
+            command = add_url_name % (index, key,  plist_path)
+            subprocess.check_call(command, shell=True)
+            if verbose:
+                print 'command: %s' % command
+
+            command = add_url_scheme % (index, plist_path)
+            subprocess.check_call(command, shell=True)
+            if verbose:
+                print 'command: %s' % command
+
+            command = add_url_schemes % (index, value,  plist_path)
+            subprocess.check_call(command, shell=True)
+            if verbose:
+                print 'command: %s' % command
+
+    except Exception as e:
+        print 'update plist for pay error'
         raise e
 
 
@@ -171,9 +223,12 @@ def update_header(header_json , header_path, test, verbose):
 
 
 if __name__ == '__main__':
-    json = tools.load_json_from_file('./temp/config.json', True)
-    update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
+    # json = tools.load_json_from_file('./temp/config.json', True)
+    # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
+
+    pass
+
 
 
 

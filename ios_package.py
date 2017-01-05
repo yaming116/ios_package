@@ -20,6 +20,7 @@ __author__ = 'sunshanming'
 appIconFileName = 'AppIcon60x60@3x.png'
 plist_key = 'plist'
 header_key = 'header'
+pay = 'pay'
 login_keychain = '~/Library/Keychains/login.keychain'
 
 
@@ -336,6 +337,12 @@ def main():
         print 'update plist fail: %s' % e
         raise e
 
+    # update plist for pay
+    try:
+        update_config.add_pay(json_config_data.get(pay), plist, verbose, test)
+    except Exception as e:
+        print 'update plist for pay fail: %s' % e
+        raise e
     # update bundle id
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
