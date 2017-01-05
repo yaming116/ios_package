@@ -201,7 +201,12 @@ def update_header(header_json , header_path, test, verbose):
                     pattern_value = store_value
                     print 'not found'
 
-            data = re.sub(pattern % header_key, pattern_value % (header_key, header_value), data)
+                data = re.sub(pattern % header_key, pattern_value % (header_key, header_value), data)
+
+            else:
+                if verbose:
+                    print 'can not found header file key: %s' % header_key
+
 
         http_path = header_json.get('TEST_UR_HTTPURL', None)
         if test:
