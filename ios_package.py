@@ -339,7 +339,7 @@ def main():
 
     # update plist for pay
     try:
-        update_config.add_pay(json_config_data.get(pay), plist, verbose, test)
+        update_config.add_pay(json_config_data.get(pay), plist, verbose)
     except Exception as e:
         print 'update plist for pay fail: %s' % e
         raise e
