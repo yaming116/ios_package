@@ -82,7 +82,7 @@ def add_pay(update_json, plist_path, verbose):
         add_role = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleTypeRole string Editor" %s'
         add_url_name = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLName string %s" %s'
         add_url_scheme = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes array" %s'
-        add_url_schemes = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes:%s string wxa5ae17722e3472ae" %s'
+        add_url_schemes = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes:0 string %s" %s'
         subprocess.check_call(command, shell=True)
         if verbose:
             print 'command: %s' % command
@@ -115,7 +115,7 @@ def add_pay(update_json, plist_path, verbose):
             subprocess.check_call(command, shell=True)
             if verbose:
                 print 'command: %s' % command
-
+            index += 1
     except Exception as e:
         print 'update plist for pay error'
         raise e
