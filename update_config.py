@@ -77,8 +77,8 @@ def add_pay(update_json, plist_path, verbose):
         /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string wxa5ae17722e3472ae" info.plist
         '''
         command = '/usr/libexec/PlistBuddy -c "Delete :CFBundleURLTypes" %s' % plist_path
-        add_array = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" % '% plist_path
-        add_dict = '/usr/libexec/PlistBuddy -c "Add  :CFBundleURLTypes:%s dict" % '
+        add_array = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" %s '% plist_path
+        add_dict = '/usr/libexec/PlistBuddy -c "Add  :CFBundleURLTypes:%s dict" %s '
         add_role = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleTypeRole string Editor" %s'
         add_url_name = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLName string %s" %s'
         add_url_scheme = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes array" %s'
@@ -227,7 +227,7 @@ if __name__ == '__main__':
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
 
-    pass
+    add_pay('', '', False, False)
 
 
 
