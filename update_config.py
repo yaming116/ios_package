@@ -83,7 +83,12 @@ def add_pay(update_json, plist_path, verbose):
         add_url_name = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLName string %s" %s'
         add_url_scheme = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes array" %s'
         add_url_schemes = '/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:%s:CFBundleURLSchemes:0 string %s" %s'
-        subprocess.check_call(command, shell=True)
+
+        try:
+            subprocess.check_call(command, shell=True)
+        except Exception:
+            # ignore ,some version code not contain CFBundleURLTypes
+            print 'not found CFBundleURLTypes'
         if verbose:
             print 'command: %s' % command
         subprocess.check_call(add_array, shell=True)
