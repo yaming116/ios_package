@@ -15,6 +15,7 @@ import shutil
 'a script for build ios package'
 
 __author__ = 'sunshanming'
+__version__ = '1.0.1'
 
 
 appIconFileName = 'AppIcon60x60@3x.png'
@@ -53,6 +54,7 @@ if verbose:
     print 'ios parent config path %s' % parent_config
     print 'ios config path %s' % config
     print 'ios source path %s' % source
+    print 'version is: %s' % __version__
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
