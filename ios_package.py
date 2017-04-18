@@ -256,11 +256,8 @@ def export_ipa():
 
 
 def tran_key_json(json_data):
-    result = {}
-    for key, value in json_data.items():
-        key = key.replace('_TEST', '')
-        result[key] = value
-
+    path = json_data['key']
+    result = tools.load_json_from_file(path, verbose)
     if verbose:
         print 'key data: %s' % json_data
     return result
@@ -299,9 +296,10 @@ def main():
         if test:
             json_config_data_key = tran_key_json(json_config_data['key_test'])
         else:
-            json_config_data_key = json_config_data['key']
+            json_config_data_key = tran_key_json(json_config_data['key'])
     except Exception as e:
         print 'load json config fail: %s' % e
+        print '加载证书失败,请检查相关配置'
         raise e
 
     try:
