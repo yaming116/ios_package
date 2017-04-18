@@ -259,7 +259,7 @@ def tran_key_json(json_data, key):
     path = json_data[key]
     result = tools.load_json_from_file(path, verbose)
     if verbose:
-        print 'key data: %s' % json_data
+        print 'key data: %s' % result
     return result
 
 
