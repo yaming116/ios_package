@@ -15,6 +15,7 @@ import shutil
 'a script for build ios package'
 
 __author__ = 'sunshanming'
+__version__ = '1.0.1'
 
 
 appIconFileName = 'AppIcon60x60@3x.png'
@@ -53,6 +54,7 @@ if verbose:
     print 'ios parent config path %s' % parent_config
     print 'ios config path %s' % config
     print 'ios source path %s' % source
+    print 'version is: %s' % __version__
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
@@ -255,14 +257,11 @@ def export_ipa():
     print '========================================'
 
 
-def tran_key_json(json_data):
-    result = {}
-    for key, value in json_data.items():
-        key = key.replace('_TEST', '')
-        result[key] = value
-
+def tran_key_json(json_data, key):
+    path = json_data[key]
+    result = tools.load_json_from_file(path, verbose)
     if verbose:
-        print 'key data: %s' % json_data
+        print 'key data: %s' % result
     return result
 
 
@@ -297,11 +296,12 @@ def main():
         global json_config_data_key
         json_config_data = tools.load_json_from_file(config_json, verbose)
         if test:
-            json_config_data_key = tran_key_json(json_config_data['key_test'])
+            json_config_data_key = tran_key_json(json_config_data['key_test'], 'key_test')
         else:
-            json_config_data_key = json_config_data['key']
+            json_config_data_key = tran_key_json(json_config_data['key'], 'key')
     except Exception as e:
         print 'load json config fail: %s' % e
+        print '加载证书失败,请检查相关配置'
         raise e
 
     try:
