@@ -186,7 +186,7 @@ def update_header(header_json , header_path, test, verbose):
             header_key = key
             header_value = value
 
-            if not value or len(value) <= 0:
+            if not value or len(str(value)) <= 0:
                 print 'value is null'
                 continue
 
