@@ -97,7 +97,7 @@ def check_config():
                 print 'config: %s' % p
 
     # check bundle image resource
-    bundle_file.check(bundle_json_data, image_resource, verbose)
+    # bundle_file.check(bundle_json_data, image_resource, verbose)
 
     #clean app icon
     if os.path.exists(app_icon_dist):
@@ -287,7 +287,10 @@ def main():
         raise e
 
     try:
-        icon_make(verbose, app_icon, app_icon_dist)
+        if os.path.exists(app_icon):
+            icon_make(verbose, app_icon, app_icon_dist)
+        else:
+            print '没有发现icon'
     except Exception as e:
         print 'icon make exception: %s' % e.message
         raise e
@@ -296,7 +299,6 @@ def main():
         launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose=verbose, inter=True)
     except Exception as e:
         print 'launch image exception: %s' % e.message
-        raise e
 
     # pod install
     try:
