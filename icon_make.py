@@ -31,6 +31,9 @@ ico_list = [{'size': 20, 'multiple': 2, 'type': 'iphone'},
 def make(verbose, app_icon, app_icon_dist):
     if verbose:
         print 'start icon make'
+    if not os.path.exists(app_icon) :
+        print 'app icon not found'
+        return
     images = []
     for icon in ico_list:
         s = icon['size']

@@ -65,7 +65,7 @@ launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
 
 
-resource = {config_json, app_icon}
+resource = {config_json}
 
 app_icon_dist = os.path.join(source, 'InternetHospital', 'Assets.xcassets', 'AppIcon.appiconset')
 ipa_dist = os.path.join(parent_config , 'IPA')
@@ -96,8 +96,6 @@ def check_config():
             if verbose:
                 print 'config: %s' % p
 
-    # launch_image_make check
-    launch_image_make.check_config(launch_image_dir, inter=TabError)
     # check bundle image resource
     bundle_file.check(bundle_json_data, image_resource, verbose)
 
