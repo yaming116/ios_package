@@ -25,20 +25,32 @@ config = [{'idiom': 'iphone', 'subtype': '736h', 'filename': '1242-2208.png', 'm
           {'idiom': 'ipad', 'filename': '768-1024.png', 'minimum-system-version': '7.0', 'scale': '1x'},
           {'idiom': 'ipad', 'filename': '1536-2048.png', 'minimum-system-version': '7.0', 'scale': '2x'}]
 
+config_inter = [
+    {'idiom': 'iphone', 'subtype': '736h', 'filename': '1242-2208.png', 'minimum-system-version': '8.0', 'scale': '3x'},
+    {'idiom': 'iphone', 'subtype': '667h', 'filename': '750-1334.png', 'minimum-system-version': '8.0', 'scale': '2x'},
+    {'idiom': 'iphone', 'filename': '640-960.png', 'minimum-system-version': '7.0', 'scale': '2x'},
+    {'idiom': 'iphone', 'subtype': 'retina4', 'filename': '640-1136.png', 'minimum-system-version': '7.0',
+     'scale': '2x'}];
 
-def check_config(launch_image_dir):
 
-    for launch in config:
+def check_config(launch_image_dir, inter=False):
+    c = config
+    if inter:
+        c = config_inter
+    for launch in c:
         p = path.join(launch_image_dir, launch['filename'])
         if not (path.exists(p)):
             raise ValueError('launch image not exist: %s' % p)
 
 
-def copy(launch_image_dir, app_launch_image_dist, verbose=False):
+def copy(launch_image_dir, app_launch_image_dist, verbose=False, inter=False):
     if verbose:
         print 'start launch image make'
     images = []
-    for launch in config:
+    c = config
+    if inter:
+        c = config_inter
+    for launch in c:
         p = path.join(launch_image_dir, launch['filename'])
         shutil.copy(p, app_launch_image_dist)
         launch['extent'] = 'full-screen'

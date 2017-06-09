@@ -58,6 +58,8 @@ if verbose:
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
+if doctor:
+    app_icon = os.path.join(config, 'AppIcon', 'AppIconDcotor60x60@3x.png')
 config_json = os.path.join(config, 'config.json')
 launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
@@ -95,7 +97,7 @@ def check_config():
                 print 'config: %s' % p
 
     # launch_image_make check
-    launch_image_make.check_config(launch_image_dir)
+    launch_image_make.check_config(launch_image_dir, inter=TabError)
     # check bundle image resource
     bundle_file.check(bundle_json_data, image_resource, verbose)
 
@@ -293,7 +295,7 @@ def main():
         raise e
 
     try:
-        launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose)
+        launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose=verbose, inter=True)
     except Exception as e:
         print 'launch image exception: %s' % e.message
         raise e
@@ -331,6 +333,10 @@ def main():
 
     # update header file
     try:
+        if doctor:
+            json_config_data[header_key]['EditionType'] = 2
+        else:
+            json_config_data[header_key]['EditionType'] = 1
         update_config.update_header(json_config_data[header_key], config_header, False, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
