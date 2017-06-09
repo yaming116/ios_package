@@ -233,11 +233,11 @@ def update_header(header_json , header_path, test, verbose):
 
 
 if __name__ == '__main__':
-    # json = tools.load_json_from_file('./temp/config.json', True)
+    json = tools.load_json_from_file('./temp/config.json', True)
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
+    update_header(json['header'], 'temp/TencentConfig.h', False, True)
 
-    add_pay('', '', False, False)
 
 
 

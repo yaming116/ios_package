@@ -58,10 +58,11 @@ if verbose:
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
+launch_image_dir = os.path.join(config, 'LaunchImage')
 if doctor:
     app_icon = os.path.join(config, 'AppIcon', 'AppIconDcotor60x60@3x.png')
+    launch_image_dir = os.path.join(config, 'LaunchImageDoctor')
 config_json = os.path.join(config, 'config.json')
-launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
 
 
@@ -101,15 +102,17 @@ def check_config():
 
     #clean app icon
     if os.path.exists(app_icon_dist):
-        for f in os.listdir(app_icon_dist):
-            os.remove(os.path.join(app_icon_dist, f))
+        # for f in os.listdir(app_icon_dist):
+        #     os.remove(os.path.join(app_icon_dist, f))
+        pass
     else:
         os.makedirs(app_icon_dist)
 
     #clean app launch image
     if os.path.exists(app_launch_image_dist):
-        for f in os.listdir(app_launch_image_dist):
-            os.remove(os.path.join(app_launch_image_dist, f))
+        # for f in os.listdir(app_launch_image_dist):
+        #     os.remove(os.path.join(app_launch_image_dist, f))
+        pass
     else:
         os.makedirs(app_launch_image_dist)
 
@@ -288,6 +291,8 @@ def main():
 
     try:
         if os.path.exists(app_icon):
+            for f in os.listdir(app_icon_dist):
+                os.remove(os.path.join(app_icon_dist, f))
             icon_make(verbose, app_icon, app_icon_dist)
         else:
             print '没有发现icon'
