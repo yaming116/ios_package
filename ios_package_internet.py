@@ -199,7 +199,7 @@ xcodebuild archive -workspace RubikU-Popular.xcworkspace -scheme  RubikU-Popular
 
 def archive():
     uuid = check_dev().strip()
-    xcworkspace = os.path.join(source, name, '%s.xcworkspace' % name)
+    xcworkspace = os.path.join(source, '%s.xcworkspace' % name)
     global export_archive
     export_archive = '%s/build/Products/%s.xcarchive ' % (parent_config, name)
 
