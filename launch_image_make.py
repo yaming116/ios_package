@@ -61,7 +61,7 @@ def copy(launch_image_dir, app_launch_image_dist, verbose=False, inter=False):
         images.extend(config_default)
     for launch in c:
         p = path.join(launch_image_dir, launch['filename'])
-        dist = os.path.join(launch_image_dir, launch['filename'])
+        dist = os.path.join(app_launch_image_dist, launch['filename'])
         if os.path.exists(dist):
             os.remove(dist)
         shutil.copy(p, app_launch_image_dist)
