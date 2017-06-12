@@ -281,8 +281,9 @@ def main():
         global json_config_data_key
         # TODO 加载默认证书
         json_config_data = tools.load_json_from_file(config_json, verbose)
-        if json_config_data.get('key') is None:
-            json_config_data['key'] = {'key': '/Volumes/BAK/config/ios/山东省肿瘤医院AD/config.json'}
+        key = json_config_data.get('key');
+        if key is None or len(key) <= 0:
+            json_config_data['key'] = {'key': '/Volumes/BAK/config/ios/测试证书/config.json'}
         json_config_data_key = tran_key_json(json_config_data['key'], 'key')
     except Exception as e:
         print 'load json config fail: %s' % e
