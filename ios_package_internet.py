@@ -30,12 +30,14 @@ parser.add_argument('--source', dest='source', help='ios source path', required=
 parser.add_argument('--password', dest='password', help='os password')
 parser.add_argument('--name', dest='name', help='project name')
 parser.add_argument('--config', dest='config', help='ios config path', required=True)
-parser.add_argument('-doctor', '--doctor', dest='doctor', action='store_true' , help='default is patient, true is doctor')
+parser.add_argument('-test', '--test', dest='test', action='store_true' , help='test ipa build')
+parser.add_argument('-doctor', '--doctor', dest='doctor', action='store_true' , help='doctor or patient')
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Print verbose logging.')
 
 args = parser.parse_args()
 
 verbose = args.verbose or False
+test = args.test or False
 doctor = args.doctor or False
 parent_config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
@@ -59,9 +61,6 @@ if verbose:
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
 launch_image_dir = os.path.join(config, 'LaunchImage')
-if doctor:
-    app_icon = os.path.join(config, 'AppIcon', 'AppIconDcotor60x60@3x.png')
-    launch_image_dir = os.path.join(config, 'LaunchImageDoctor')
 config_json = os.path.join(config, 'config.json')
 image_resource = os.path.join(config, 'ImageResources')
 
@@ -102,16 +101,16 @@ def check_config():
 
     #clean app icon
     if os.path.exists(app_icon_dist):
-        # for f in os.listdir(app_icon_dist):
-        #     os.remove(os.path.join(app_icon_dist, f))
+        for f in os.listdir(app_icon_dist):
+            os.remove(os.path.join(app_icon_dist, f))
         pass
     else:
         os.makedirs(app_icon_dist)
 
     #clean app launch image
     if os.path.exists(app_launch_image_dist):
-        # for f in os.listdir(app_launch_image_dist):
-        #     os.remove(os.path.join(app_launch_image_dist, f))
+        for f in os.listdir(app_launch_image_dist):
+            os.remove(os.path.join(app_launch_image_dist, f))
         pass
     else:
         os.makedirs(app_launch_image_dist)
@@ -127,7 +126,7 @@ def pod_install():
     #     name = os.path.basename(source)
     # xcworkspace = os.path.join(source, name)
 
-    subprocess.check_call('cd %s && ls -al && pod install' % source, shell=True)
+    subprocess.check_call('cd %s && ls -al && pod deintegrate && pod install' % source, shell=True)
 
 
 def get_project_pbxpproj():
@@ -224,11 +223,7 @@ def export_ipa():
     localtime = time.localtime(time.time())
     day = time.strftime("%Y-%m-%d_%H:%M", time.localtime())
     id = int(time.mktime(localtime) / 10)
-    if doctor:
-        ipa_name = '%s_%s_doctor_%s.ipa' % (day, id, basename)
-    else:
-        ipa_name = '%s_%s_patient_%s.ipa' % (day, id, basename)
-
+    ipa_name = '%s_%s_%s.ipa' % (day, id, basename)
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
               % (export_archive, p, get_provisioning_profile())
@@ -279,12 +274,11 @@ def main():
     try:
         global json_config_data
         global json_config_data_key
-        # TODO 加载默认证书
         json_config_data = tools.load_json_from_file(config_json, verbose)
-        key = json_config_data.get('key');
-        if key is None or len(key) <= 0:
-            json_config_data['key'] = {'key': '/Volumes/BAK/config/ios/测试证书/config.json'}
-        json_config_data_key = tran_key_json(json_config_data['key'], 'key')
+        if test:
+            json_config_data_key = tran_key_json(json_config_data['key_test'], 'key_test')
+        else:
+            json_config_data_key = tran_key_json(json_config_data['key'], 'key')
     except Exception as e:
         print 'load json config fail: %s' % e
         print '加载证书失败,请检查相关配置'
@@ -315,10 +309,7 @@ def main():
 
     # update plist
     try:
-        key = 'patient_plist'
-        if doctor:
-            key = 'doctor_plist'
-        update_config.update_plist(json_config_data[key], plist, verbose, False)
+        update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
         print 'update plist fail: %s' % e
         raise e
@@ -330,6 +321,8 @@ def main():
         print 'update plist for pay fail: %s' % e
         raise e
     # update bundle id
+
+
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
@@ -343,7 +336,7 @@ def main():
             json_config_data[header_key]['EditionType'] = 2
         else:
             json_config_data[header_key]['EditionType'] = 1
-        update_config.update_header(json_config_data[header_key], config_header, False, verbose)
+        update_config.update_header(json_config_data[header_key], config_header, test, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
         raise e
