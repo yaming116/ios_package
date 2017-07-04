@@ -35,10 +35,7 @@ config_inter = [
 
 config_default = [
     {"orientation" : "portrait","idiom" : "iphone","extent" : "full-screen","scale" : "1x"},
-    {"orientation" : "landscape","idiom" : "iphone", "extent" : "full-screen","minimum-system-version":"8.0","subtype": "736h","scale" : "3x"},
-    {"orientation" : "portrait","idiom" : "iphone","minimum-system-version" : "7.0","scale" : "2x"},
-    {"extent" : "full-screen","idiom" : "iphone","subtype" : "retina4","minimum-system-version" : "7.0","orientation" : "portrait", "scale" : "2x"
-    }]
+    {"orientation" : "landscape","idiom" : "iphone", "extent" : "full-screen","minimum-system-version":"8.0","subtype": "736h","scale" : "3x"}]
 
 
 def check_config(launch_image_dir, inter=False):
