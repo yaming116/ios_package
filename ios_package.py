@@ -142,7 +142,7 @@ def pod_install():
         name = os.path.basename(source)
     xcworkspace = os.path.join(source, name)
 
-    subprocess.check_call('cd %s && ls -al && pod deintegrate &&  pod install' % xcworkspace, shell=True)
+    subprocess.check_call('cd %s && ls -al && pod deintegrate &&  pod update' % xcworkspace, shell=True)
 
 
 def get_project_pbxpproj():
