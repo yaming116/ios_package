@@ -138,7 +138,7 @@ def check_config():
 
 def update_commit_id():
     id = subprocess.check_output('cd %s && git rev-parse --short HEAD' % source, shell=True)
-    if not id:
+    if id:
         id = id.strip()
     if verbose:
         print 'current commit id: %s' % id
