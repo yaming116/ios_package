@@ -59,6 +59,17 @@ def update_plist(update_json, plist_path, verbose, test):
         raise e
 
 
+def update_plist_commit_id(commit_id, plist_path, verbose):
+    try:
+        key = u'CommitId'
+        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, commit_id, plist_path)
+        subprocess.check_call(command, shell=True)
+        if verbose:
+            print 'command: %s' % command
+    except Exception as e1:
+        pass
+
+
 def add_pay(update_json, plist_path, verbose):
     if verbose:
         print 'start update plist for pay'

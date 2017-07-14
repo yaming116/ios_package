@@ -136,6 +136,13 @@ def check_config():
         os.makedirs(ipa_dist)
 
 
+def update_commit_id():
+    id = subprocess.check_output('cd %s && git rev-parse --short HEAD' % source, shell=True)
+    if verbose:
+        print 'current commit id: %s' % id
+    update_config.update_plist_commit_id(id, plist, verbose)
+
+
 def pod_install():
     global name
     if not name:
@@ -321,6 +328,11 @@ def main():
         bundle_file.copy(bundle_json_data, image_resource, app_image_folder_dist, verbose)
     except Exception as e:
         print 'bundle image copy exception: %s' % e.message
+        raise e
+    try:
+        update_commit_id();
+    except Exception as e:
+        print 'update commit exception: %s' % e.message
         raise e
 
     # pod install
