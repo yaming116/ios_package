@@ -157,9 +157,14 @@ def update_plist_option(options, plist_path, verbose):
 
     if not options:
         return
+    if verbose:
+        print 'update option plist config'
+        print '=========================='
     if options.has('HEAD_IMG') and options['HEAD_IMG']:
+        print 'has HEAD_IMG'
         update_plist_key('HomeTitleIcon', True, plist_path, verbose)
     else:
+        print 'not found HEAD_IMG'
         update_plist_key('HomeTitleIcon', False, plist_path, verbose)
 
 
