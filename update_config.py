@@ -139,16 +139,28 @@ def add_pay(update_json, plist_path, verbose):
 
 def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
     try:
-
-        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('CFBundleIdentifier', bundle_id, plist_path)
-        if verbose:
-            print 'command: %s' % command
-        subprocess.check_call(command, shell=True)
-
+        update_plist_key('CFBundleIdentifier', bundle_id, plist_path ,verbose)
         update_pbxproj(pbxpproj, bundle_id, verbose)
     except Exception as e:
         print 'update bundle id error: %s' % e.message
         raise e
+
+
+def update_plist_key(key, value, plist_path, verbose):
+    command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+    if verbose:
+        print 'command: %s' % command
+    subprocess.check_call(command, shell=True)
+
+
+def update_plist_option(options, plist_path, verbose):
+
+    if not options:
+        return
+    if options.has('HEAD_IMG') and options['HEAD_IMG']:
+        update_plist_key('HomeTitleIcon', True, plist_path, verbose)
+    else:
+        update_plist_key('HomeTitleIcon', False, plist_path, verbose)
 
 
 def update_pbxproj(path, bundle_id, verbose):

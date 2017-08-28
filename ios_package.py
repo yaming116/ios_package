@@ -365,6 +365,14 @@ def main():
         print 'update plist fail: %s' % e
         raise e
 
+    # update options
+
+    try:
+        update_config.update_plist_option(json_config_data['option'], plist, verbose)
+    except Exception as e:
+        print 'update option configs' % e
+        raise e
+
     # update header file
     try:
         update_config.update_header(json_config_data[header_key], config_header, test, verbose)
