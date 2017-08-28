@@ -156,6 +156,7 @@ def update_plist_key(key, value, plist_path, verbose):
 def update_plist_option(options, plist_path, verbose):
 
     if not options:
+        print 'option config is empty'
         return
     if verbose:
         print 'update option plist config'
