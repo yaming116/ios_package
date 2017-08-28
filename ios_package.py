@@ -15,7 +15,7 @@ import shutil
 'a script for build ios package'
 
 __author__ = 'sunshanming'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 appIconFileName = 'AppIcon60x60@3x.png'
