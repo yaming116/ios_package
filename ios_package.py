@@ -17,6 +17,7 @@ import shutil
 __author__ = 'sunshanming'
 __version__ = '1.0.2'
 
+print 'version is: %s' % __version__
 
 appIconFileName = 'AppIcon60x60@3x.png'
 plist_key = 'plist'
