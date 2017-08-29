@@ -147,10 +147,7 @@ def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
 
 
 def update_plist_key(key, value, plist_path, verbose):
-    if isinstance(value, bool):
-        command = "/usr/libexec/PlistBuddy -c 'Set :%s %b' %s" % (key, value, plist_path)
-    else:
-        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+    command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
     if verbose:
         print 'command: %s' % command
     subprocess.check_call(command, shell=True)
@@ -166,10 +163,10 @@ def update_plist_option(options, plist_path, verbose):
         print '=========================='
     if options.has('HEAD_IMG') and options['HEAD_IMG']:
         print 'has HEAD_IMG'
-        update_plist_key('HomeTitleIcon', True, plist_path, verbose)
+        update_plist_key('HomeTitleIcon', 'true', plist_path, verbose)
     else:
         print 'not found HEAD_IMG'
-        update_plist_key('HomeTitleIcon', False, plist_path, verbose)
+        update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)
 
 
 def update_pbxproj(path, bundle_id, verbose):
