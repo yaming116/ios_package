@@ -370,6 +370,7 @@ def main():
 
     try:
         update_config.update_plist_option(json_config_data['option'], plist, verbose)
+        return
     except Exception as e:
         print 'update option configs' % e
         raise e
