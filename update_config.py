@@ -10,6 +10,7 @@ import utils.utils as tools
 import codecs
 import sys
 import json
+import icon_make
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -154,7 +155,7 @@ def update_plist_key(key, value, plist_path, verbose):
     subprocess.check_call(command, shell=True)
 
 
-def update_plist_option(options, plist_path, verbose):
+def update_plist_option(options, plist_path, source, resource, verbose):
 
     if not options:
         print 'option config is empty'
@@ -166,6 +167,7 @@ def update_plist_option(options, plist_path, verbose):
     if options.has_key('HEAD_IMG') and options['HEAD_IMG']:
         print 'has HEAD_IMG'
         update_plist_key('HomeTitleIcon', 'true', plist_path, verbose)
+        icon_make.head_ico_make(source, resource, verbose)
     else:
         print 'not found HEAD_IMG'
         update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)

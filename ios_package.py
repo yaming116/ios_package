@@ -72,9 +72,10 @@ app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets',
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
-
+# URMain/URHomePage/Resources/URHomePageImages.xcassets/ur_home_title_icon.imageset/
 plist = os.path.join(source, 'URConfigFiles', 'Info.plist')
 bundle_json = os.path.join(source, 'URConfigFiles', 'URConfigJSON.geojson')
+
 
 # 头文件
 config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
@@ -369,7 +370,7 @@ def main():
     # update options
 
     try:
-        update_config.update_plist_option(json_config_data['option'], plist, verbose)
+        update_config.update_plist_option(json_config_data['option'], plist, source, image_resource, verbose)
         return
     except Exception as e:
         print 'update option configs' % e
