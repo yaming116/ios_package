@@ -375,8 +375,6 @@ def main():
         print 'update option configs' % e.message
         raise e
 
-    return
-
     # update header file
     try:
         update_config.update_header(json_config_data[header_key], config_header, test, verbose)

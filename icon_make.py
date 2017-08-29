@@ -72,7 +72,7 @@ def make(verbose, app_icon, app_icon_dist):
 def head_ico_make(source, resource, verbose):
     if verbose:
         print 'update head ico'
-    head_ico_path = os.pardir.join(source, 'RubikU-Popular', 'RubikU-Popular', 'URMain', 'URHomePage', 'Resources',
+    head_ico_path = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'URMain', 'URHomePage', 'Resources',
                                    'URHomePageImages.xcassets', 'ur_home_title_icon.imageset')
 
     head_img = os.path.join(resource, '医院logo@3x.png')
