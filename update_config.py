@@ -147,7 +147,10 @@ def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
 
 
 def update_plist_key(key, value, plist_path, verbose):
-    command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+    if isinstance(value, bool):
+        command = "/usr/libexec/PlistBuddy -c 'Set :%s %b' %s" % (key, value, plist_path)
+    else:
+        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
     if verbose:
         print 'command: %s' % command
     subprocess.check_call(command, shell=True)
@@ -262,11 +265,14 @@ def update_header(header_json , header_path, test, verbose):
 
 
 if __name__ == '__main__':
-    json = tools.load_json_from_file('./temp/config.json', True)
+    # json = tools.load_json_from_file('./temp/config.json', True)
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
-    update_header(json['header'], 'temp/TencentConfig.h', False, True)
+    # update_header(json['header'], 'temp/TencentConfig.h', False, True)
 
+    a = False
+    if isinstance(a, bool):
+        print 'bool'
 
 
 
