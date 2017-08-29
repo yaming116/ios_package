@@ -9,6 +9,7 @@ import re
 import utils.utils as tools
 import codecs
 import sys
+import json
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -161,7 +162,8 @@ def update_plist_option(options, plist_path, verbose):
     if verbose:
         print 'update option plist config'
         print '=========================='
-    if options.has('HEAD_IMG') and options['HEAD_IMG']:
+        print options
+    if options.has_key('HEAD_IMG') and options['HEAD_IMG']:
         print 'has HEAD_IMG'
         update_plist_key('HomeTitleIcon', 'true', plist_path, verbose)
     else:
@@ -266,11 +268,10 @@ if __name__ == '__main__':
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
     # update_header(json['header'], 'temp/TencentConfig.h', False, True)
+    # update_plist_key('HomeTitleIcon', 'true', 'a', True)
 
-    a = False
-    if isinstance(a, bool):
-        print 'bool'
-
+    a = json.loads('{"HEAD_IMG": true}', encoding='utf-8')
+    update_plist_option(a, '', True)
 
 
 
