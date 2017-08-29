@@ -76,19 +76,22 @@ def head_ico_make(source, resource, verbose):
                                    'URHomePageImages.xcassets', 'ur_home_title_icon.imageset')
 
     head_img = os.path.join(resource, '医院logo@3x.png')
-    if os.path.exists(head_img):
+    if not os.path.exists(head_img):
         raise ValueError("医院logo图片没有上传")
+    else:
+        if verbose:
+            print 'head image path is: %s' % head_img
 
     for f in os.listdir(head_ico_path):
         if f.endswith('.png'):
             os.remove(os.path.join(head_ico_path, f))
 
-    for icon in ico_list:
+    for icon in head_list:
         s = icon['size']
         multiple = icon['multiple']
         size = int(s * multiple)
 
-        icon_name = HEAD_ICO % (size)
+        icon_name = HEAD_ICO % size
 
         command = 'convert -resize %sx%s  %s  %s' % (
             size, size, head_img, os.path.join(head_ico_path, icon_name))
@@ -98,3 +101,6 @@ def head_ico_make(source, resource, verbose):
             subprocess.check_output(command, shell=True).decode('utf-8')
         except Exception as e:
             raise e
+
+if __name__ == '__main__':
+    print HEAD_ICO % (20)

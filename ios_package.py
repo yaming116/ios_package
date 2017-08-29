@@ -350,31 +350,32 @@ def main():
     try:
         update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
-        print 'update plist fail: %s' % e
+        print 'update plist fail: %s' % e.message
         raise e
 
     # update plist for pay
     try:
         update_config.add_pay(json_config_data.get(pay), plist, verbose)
     except Exception as e:
-        print 'update plist for pay fail: %s' % e
+        print 'update plist for pay fail: %s' % e.message
         raise e
     # update bundle id
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
     except Exception as e:
-        print 'update plist fail: %s' % e
+        print 'update plist fail: %s' % e.message
         raise e
 
     # update options
 
     try:
         update_config.update_plist_option(json_config_data['option'], plist, source, image_resource, verbose)
-        return
     except Exception as e:
-        print 'update option configs' % e
+        print 'update option configs' % e.message
         raise e
+
+    return
 
     # update header file
     try:
