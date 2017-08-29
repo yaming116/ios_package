@@ -91,7 +91,7 @@ def head_ico_make(source, resource, verbose):
         multiple = icon['multiple']
         size = int(s * multiple)
 
-        icon_name = HEAD_ICO % size
+        icon_name = HEAD_ICO % multiple
 
         command = 'convert -resize %sx%s  %s  %s' % (
             size, size, head_img, os.path.join(head_ico_path, icon_name))
