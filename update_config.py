@@ -9,6 +9,8 @@ import re
 import utils.utils as tools
 import codecs
 import sys
+import json
+import icon_make
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -139,16 +141,36 @@ def add_pay(update_json, plist_path, verbose):
 
 def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
     try:
-
-        command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('CFBundleIdentifier', bundle_id, plist_path)
-        if verbose:
-            print 'command: %s' % command
-        subprocess.check_call(command, shell=True)
-
+        update_plist_key('CFBundleIdentifier', bundle_id, plist_path ,verbose)
         update_pbxproj(pbxpproj, bundle_id, verbose)
     except Exception as e:
         print 'update bundle id error: %s' % e.message
         raise e
+
+
+def update_plist_key(key, value, plist_path, verbose):
+    command = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % (key, value, plist_path)
+    if verbose:
+        print 'command: %s' % command
+    subprocess.check_call(command, shell=True)
+
+
+def update_plist_option(options, plist_path, source, resource, verbose):
+
+    if not options:
+        print 'option config is empty'
+        return
+    if verbose:
+        print 'update option plist config'
+        print '=========================='
+        print options
+    if options.has_key('HEAD_IMG') and options['HEAD_IMG']:
+        print 'has HEAD_IMG'
+        update_plist_key('HomeTitleIcon', 'true', plist_path, verbose)
+        icon_make.head_ico_make(source, resource, verbose)
+    else:
+        print 'not found HEAD_IMG'
+        update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)
 
 
 def update_pbxproj(path, bundle_id, verbose):
@@ -244,12 +266,14 @@ def update_header(header_json , header_path, test, verbose):
 
 
 if __name__ == '__main__':
-    json = tools.load_json_from_file('./temp/config.json', True)
+    # json = tools.load_json_from_file('./temp/config.json', True)
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
     # update_pbxproj('./temp/project.pbxproj', 'com.ucmed.rxp', True)
-    update_header(json['header'], 'temp/TencentConfig.h', False, True)
+    # update_header(json['header'], 'temp/TencentConfig.h', False, True)
+    # update_plist_key('HomeTitleIcon', 'true', 'a', True)
 
-
+    a = json.loads('{"HEAD_IMG": true}', encoding='utf-8')
+    update_plist_option(a, '', True)
 
 
 

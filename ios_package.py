@@ -15,8 +15,9 @@ import shutil
 'a script for build ios package'
 
 __author__ = 'sunshanming'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
+print 'version is: %s' % __version__
 
 appIconFileName = 'AppIcon60x60@3x.png'
 plist_key = 'plist'
@@ -71,9 +72,10 @@ app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets',
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
-
+# URMain/URHomePage/Resources/URHomePageImages.xcassets/ur_home_title_icon.imageset/
 plist = os.path.join(source, 'URConfigFiles', 'Info.plist')
 bundle_json = os.path.join(source, 'URConfigFiles', 'URConfigJSON.geojson')
+
 
 # 头文件
 config_header = os.path.join(source, 'URConfigFiles', 'URConfigHeader.h')
@@ -348,21 +350,29 @@ def main():
     try:
         update_config.update_plist(json_config_data[plist_key], plist, verbose, test)
     except Exception as e:
-        print 'update plist fail: %s' % e
+        print 'update plist fail: %s' % e.message
         raise e
 
     # update plist for pay
     try:
         update_config.add_pay(json_config_data.get(pay), plist, verbose)
     except Exception as e:
-        print 'update plist for pay fail: %s' % e
+        print 'update plist for pay fail: %s' % e.message
         raise e
     # update bundle id
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
     except Exception as e:
-        print 'update plist fail: %s' % e
+        print 'update plist fail: %s' % e.message
+        raise e
+
+    # update options
+
+    try:
+        update_config.update_plist_option(json_config_data['option'], plist, source, image_resource, verbose)
+    except Exception as e:
+        print 'update option configs' % e.message
         raise e
 
     # update header file
