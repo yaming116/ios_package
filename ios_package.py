@@ -306,6 +306,8 @@ def main():
         global json_config_data
         global json_config_data_key
         json_config_data = tools.load_json_from_file(config_json, verbose)
+        if not json_config_data.has_key('option'):
+            json_config_data['option'] = None
         if test:
             json_config_data_key = tran_key_json(json_config_data['key_test'], 'key_test')
         else:
