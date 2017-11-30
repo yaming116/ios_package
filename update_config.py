@@ -265,6 +265,26 @@ def update_header(header_json , header_path, test, verbose):
         raise e
 
 
+def update_export_options_plist(method, bundle_id, provision_name, team_id, plist_path):
+    update_method = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('method', method, plist_path)
+    update_team_id = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('teamID', team_id, plist_path)
+    remove_provisioning_profiles = '/usr/libexec/PlistBuddy -c "Delete :provisioningProfiles" %s' % plist_path
+    add_provisioning_profiles = '/usr/libexec/PlistBuddy -c "Add  :provisioningProfiles:%s:%s " %s ' % (bundle_id, provision_name, plist_path)
+
+    try:
+        subprocess.check_call(update_method, shell=True)
+        print '更新method成功'
+        subprocess.check_call(update_team_id, shell=True)
+        print '更新team_id成功'
+        subprocess.check_call(remove_provisioning_profiles, shell=True)
+        print '更新remove_provisioning_profiles成功'
+        subprocess.check_call(add_provisioning_profiles, shell=True)
+        print '更新add_provisioning_profiles成功'
+    except Exception:
+        # ignore ,some version code not contain CFBundleURLTypes
+        print '生成exportOptions.plist失败'
+
+
 if __name__ == '__main__':
     # json = tools.load_json_from_file('./temp/config.json', True)
     # update_plist(json['plist'], './temp/URConfigHeader.h', False,  False)
