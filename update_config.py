@@ -269,7 +269,7 @@ def update_export_options_plist(method, bundle_id, provision_name, team_id, plis
     update_method = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('method', method, plist_path)
     update_team_id = "/usr/libexec/PlistBuddy -c 'Set :%s %s' %s" % ('teamID', team_id, plist_path)
     remove_provisioning_profiles = '/usr/libexec/PlistBuddy -c "Delete :provisioningProfiles" %s' % plist_path
-    add_provisioning_profiles = '/usr/libexec/PlistBuddy -c "Add  :provisioningProfiles:%s:%s " %s ' % (bundle_id, provision_name, plist_path)
+    add_provisioning_profiles = '/usr/libexec/PlistBuddy -c "Add  :provisioningProfiles:%s string %s " %s ' % (bundle_id, provision_name, plist_path)
 
     try:
         subprocess.check_call(update_method, shell=True)
