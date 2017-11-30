@@ -418,7 +418,7 @@ def main():
         raise e
 
     try:
-        update_config.update_export_options_plist(get_app_method(), json_config_data_key['UR_BUNDLE_IDENTIFIER'], get_provisioning_profile(), get_team_name(), export_option_path)
+        update_config.update_export_options_plist(get_app_method(), json_config_data_key['UR_BUNDLE_IDENTIFIER'], get_provisioning_profile(), get_team_identifier(), export_option_path)
     except Exception as e:
         print 'update_export_options_plist exception: %s' % e.message
         raise e
