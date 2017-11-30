@@ -23,6 +23,7 @@ plist_key = 'plist'
 header_key = 'header'
 pay = 'pay'
 login_keychain = '~/Library/Keychains/login.keychain'
+ExportOptions_PATH = '/Volumes/BAK/build/ExportOptions_enterprise_internet.plist'
 
 
 parser = argparse.ArgumentParser(description='a script for build ios package')
@@ -44,6 +45,7 @@ source = os.path.abspath(args.source)
 password = args.password
 name = args.name
 basename = os.path.basename(source)
+export_option_path = os.path.abspath(ExportOptions_PATH)
 
 config = os.path.join(parent_config, 'URPConfigFiles')
 
@@ -180,6 +182,19 @@ def get_provisioning_profile():
     return get_args_from_provision_file('Name').strip()
 
 
+def get_app_method():
+    name = get_provisioning_profile()
+    if 'AD' in name:
+        return 'ad-hoc'
+    if 'Universal' in name:
+        return 'enterprise'
+    if 'Distribution' in name:
+        return 'app-store'
+    raise ValueError("证书命名出错，请包涵 AD or Universal or Distribution")
+
+
+
+
 def get_team_name():
     env = get_args_from_provision_file('Entitlements:aps-environment').strip()
     team_name = get_args_from_provision_file('TeamName').strip()
@@ -225,8 +240,8 @@ def export_ipa():
     id = int(time.mktime(localtime) / 10)
     ipa_name = '%s_%s_%s.ipa' % (day, id, basename)
     p = os.path.join(ipa_dist, ipa_name)
-    command = 'xcodebuild -exportArchive -exportFormat IPA -archivePath %s -exportPath %s -exportProvisioningProfile %s'\
-              % (export_archive, p, get_provisioning_profile())
+    command = 'xcodebuild -exportArchive -archivePath %s -exportPath %s -exportOptionsPlist %s' \
+              % (export_archive, p, export_option_path)
 
     if verbose:
         print 'command: %s' % command
@@ -358,6 +373,12 @@ def main():
         archive()
     except Exception as e:
         print 'archive exception: %s' % e.message
+        raise e
+
+    try:
+        update_config.update_export_options_plist(get_app_method(), json_config_data_key['UR_BUNDLE_IDENTIFIER'], get_provisioning_profile(), get_team_name(), export_option_path)
+    except Exception as e:
+        print 'update_export_options_plist exception: %s' % e.message
         raise e
 
     try:
