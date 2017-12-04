@@ -20,6 +20,7 @@ __version__ = '1.0.2'
 print 'version is: %s' % __version__
 
 appIconFileName = 'AppIcon60x60@3x.png'
+appIcon1024 = 'AppIcon1024x1024.png'
 plist_key = 'plist'
 header_key = 'header'
 pay = 'pay'
@@ -61,6 +62,7 @@ if verbose:
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
+app_icon_1024 = os.path.join(config, 'AppIcon', 'AppIcon1024x1024.png')
 config_json = os.path.join(config, 'config.json')
 launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
@@ -332,7 +334,7 @@ def main():
         raise e
 
     try:
-        icon_make(verbose, app_icon, app_icon_dist)
+        icon_make(verbose, app_icon, app_icon_1024, app_icon_dist)
     except Exception as e:
         print 'icon make exception: %s' % e.message
         raise e
