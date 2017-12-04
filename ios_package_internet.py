@@ -62,6 +62,7 @@ if verbose:
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
+app_icon_1024 = os.path.join(config, 'AppIcon', 'AppIcon1024x1024.png')
 launch_image_dir = os.path.join(config, 'LaunchImage')
 config_json = os.path.join(config, 'config.json')
 image_resource = os.path.join(config, 'ImageResources')
@@ -303,7 +304,7 @@ def main():
         if os.path.exists(app_icon):
             for f in os.listdir(app_icon_dist):
                 os.remove(os.path.join(app_icon_dist, f))
-            icon_make(verbose, app_icon, app_icon_dist)
+            icon_make(verbose, app_icon, app_icon_1024, app_icon_dist)
         else:
             print '没有发现icon'
     except Exception as e:

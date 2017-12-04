@@ -20,6 +20,7 @@ __version__ = '1.0.2'
 print 'version is: %s' % __version__
 
 appIconFileName = 'AppIcon60x60@3x.png'
+appIcon1024 = 'AppIcon1024x1024.png'
 plist_key = 'plist'
 header_key = 'header'
 pay = 'pay'
@@ -61,6 +62,7 @@ if verbose:
 
 
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
+app_icon_1024 = os.path.join(config, 'AppIcon', 'AppIcon1024x1024.png')
 config_json = os.path.join(config, 'config.json')
 launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
@@ -251,8 +253,8 @@ def archive():
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=%s | xcpretty' % \
-              (xcworkspace, name, parent_config, export_archive, distribution, uuid, get_provisioning_profile(),
+              'PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=%s | xcpretty' % \
+              (xcworkspace, name, parent_config, export_archive, get_provisioning_profile(),
                get_team_identifier())
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
@@ -332,7 +334,7 @@ def main():
         raise e
 
     try:
-        icon_make(verbose, app_icon, app_icon_dist)
+        icon_make(verbose, app_icon, app_icon_1024, app_icon_dist)
     except Exception as e:
         print 'icon make exception: %s' % e.message
         raise e
