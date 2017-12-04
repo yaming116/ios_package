@@ -225,8 +225,8 @@ def archive():
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
-              'CODE_SIGN_IDENTITY="%s" PROVISIONING_PROFILE=%s PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=%s | xcpretty' % \
-              (xcworkspace, name, parent_config, export_archive, distribution, uuid, get_provisioning_profile(),
+              'PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=%s | xcpretty' % \
+              (xcworkspace, name, parent_config, export_archive, get_provisioning_profile(),
                get_team_identifier())
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
@@ -341,6 +341,9 @@ def main():
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
+        update_config.update_pbxproj(get_project_pbxpproj(), json_config_data_key['UR_BUNDLE_IDENTIFIER'],
+                                     get_team_identifier(),
+                                     get_provisioning_profile(), check_dev(), verbose)
     except Exception as e:
         print 'update plist fail: %s' % e
         raise e

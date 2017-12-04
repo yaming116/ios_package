@@ -142,7 +142,7 @@ def add_pay(update_json, plist_path, verbose):
 def update_bundle_id(bundle_id, plist_path, pbxpproj, verbose):
     try:
         update_plist_key('CFBundleIdentifier', bundle_id, plist_path ,verbose)
-        update_pbxproj(pbxpproj, bundle_id, verbose)
+        # update_pbxproj(pbxpproj, bundle_id, verbose)
     except Exception as e:
         print 'update bundle id error: %s' % e.message
         raise e
@@ -173,7 +173,7 @@ def update_plist_option(options, plist_path, source, resource, verbose):
         update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)
 
 
-def update_pbxproj(path, bundle_id, verbose):
+def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
     try:
         if verbose:
             print 'start update projdec.pbxproj file'
@@ -185,6 +185,14 @@ def update_pbxproj(path, bundle_id, verbose):
         value = 'PRODUCT_BUNDLE_IDENTIFIER = %s; ' % bundle_id
         data = re.sub(pattern, value , data)
 
+        pattern = r'\bDevelopmentTeam\b\s=.*'
+        value = 'DevelopmentTeam = %s;' % team_id;
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bDEVELOPMENT_TEAM\b\s=.*'
+        value = 'DEVELOPMENT_TEAM = %s;' % team_id;
+        data = re.sub(pattern, value, data)
+
         # change device family
         pattern = r'\bTARGETED_DEVICE_FAMILY\b\s=.*'
         value = 'TARGETED_DEVICE_FAMILY = 1; '
@@ -193,6 +201,26 @@ def update_pbxproj(path, bundle_id, verbose):
         # change ProvisioningStyle 改成手动签名
         pattern = r'\bProvisioningStyle\b\s=.*'
         value = 'ProvisioningStyle = Manual; '
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bCODE_SIGN_STYLE\b\s=.*'
+        value = 'CODE_SIGN_STYLE = Manual; '
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bCODE_SIGN_STYLE\b\s=.*'
+        value = 'CODE_SIGN_STYLE = Manual; '
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bPROVISIONING_PROFILE\b\s=.*'
+        value = 'PROVISIONING_PROFILE = "%s";' % uuid;
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bPROVISIONING_PROFILE_SPECIFIER\b\s=.*'
+        value = 'PROVISIONING_PROFILE_SPECIFIER = %s;'  % name;
+        data = re.sub(pattern, value, data)
+
+        pattern = r'\bCODE_SIGN_IDENTITY\b\[.*\s=.*'
+        value = 'CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";'
         data = re.sub(pattern, value, data)
 
         with codecs.open(path, 'w', "utf-8") as header_file:
@@ -244,7 +272,6 @@ def update_header(header_json , header_path, test, verbose):
             else:
                 if verbose:
                     print 'can not found header file key: %s' % header_key
-
 
         http_path = header_json.get('TEST_UR_HTTPURL', None)
         if test:
