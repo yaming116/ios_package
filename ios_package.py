@@ -379,6 +379,8 @@ def main():
     try:
         update_config.update_bundle_id(json_config_data_key['UR_BUNDLE_IDENTIFIER'], plist, get_project_pbxpproj(),
                                        verbose)
+        update_config.update_pbxproj(get_project_pbxpproj(), json_config_data_key['UR_BUNDLE_IDENTIFIER'], get_team_identifier(),
+                                     get_provisioning_profile(), check_dev(), verbose)
     except Exception as e:
         print 'update plist fail: %s' % e.message
         raise e
