@@ -203,6 +203,10 @@ def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
         value = 'ProvisioningStyle = Manual; '
         data = re.sub(pattern, value, data)
 
+        pattern = r'\bENABLE_BITCODE\b\s=.*'
+        value = 'ENABLE_BITCODE = YES; '
+        data = re.sub(pattern, value, data)
+
         pattern = r'\bCODE_SIGN_STYLE\b\s=.*'
         value = 'CODE_SIGN_STYLE = Manual; '
         data = re.sub(pattern, value, data)
@@ -213,6 +217,11 @@ def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
 
         pattern = r'\bPROVISIONING_PROFILE\b\s=.*'
         value = 'PROVISIONING_PROFILE = "%s";' % uuid;
+        data = re.sub(pattern, value, data)
+
+        # 最低支持版本
+        pattern = r'\bIPHONEOS_DEPLOYMENT_TARGET\b\s=.*'
+        value = 'IPHONEOS_DEPLOYMENT_TARGET = 8.0;';
         data = re.sub(pattern, value, data)
 
         pattern = r'\bPROVISIONING_PROFILE_SPECIFIER\b\s=.*'
