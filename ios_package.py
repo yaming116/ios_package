@@ -15,7 +15,7 @@ import shutil
 'a script for build ios package'
 
 __author__ = 'sunshanming'
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 print 'version is: %s' % __version__
 
@@ -267,9 +267,9 @@ def export_ipa():
     day = time.strftime("%Y-%m-%d_%H:%M", time.localtime())
     id = int(time.mktime(localtime) / 10)
     if test:
-        ipa_name = '%s_%s_test_%s.ipa' % (day, id, basename)
+        ipa_name = '%s_%s_test_%s' % (day, id, basename)
     else:
-        ipa_name = '%s_%s_%s.ipa' % (day, id, basename)
+        ipa_name = '%s_%s_%s' % (day, id, basename)
 
     p = os.path.join(ipa_dist, ipa_name)
     command = 'xcodebuild -exportArchive -archivePath %s -exportPath %s -exportOptionsPlist %s'\
@@ -279,10 +279,11 @@ def export_ipa():
         print 'command: %s' % command
     subprocess.check_call(command, shell=True)
 
-    print '========================================'
-    print 'app_path: %s' % p
-    print '========================================'
-
+    for x in os.listdir(p):
+        if os.path.splitext(x)[1] == '.ipa':
+            print '========================================'
+            print 'app_path: %s' % os.path.abspath(x)
+            print '========================================'
 
 def tran_key_json(json_data, key):
     path = json_data[key]
