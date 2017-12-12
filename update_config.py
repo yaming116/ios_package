@@ -203,10 +203,6 @@ def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
         value = 'ProvisioningStyle = Manual; '
         data = re.sub(pattern, value, data)
 
-        pattern = r'\bENABLE_BITCODE\b\s=.*'
-        value = 'ENABLE_BITCODE = YES; '
-        data = re.sub(pattern, value, data)
-
         pattern = r'\bCODE_SIGN_STYLE\b\s=.*'
         value = 'CODE_SIGN_STYLE = Manual; '
         data = re.sub(pattern, value, data)
