@@ -219,7 +219,7 @@ def get_app_method():
         return 'enterprise'
     if 'Distribution' in name:
         return 'app-store'
-    raise ValueError("证书命名出错，请包涵 AD or Universal or Distribution")
+    raise ValueError("证书命名出错，请包含 AD or Universal or Distribution")
 
 
 
