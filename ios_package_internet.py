@@ -251,7 +251,7 @@ def export_ipa():
     for x in os.listdir(p):
         if os.path.splitext(x)[1] == '.ipa':
             print '========================================'
-            print 'app_path: %s' % os.path.abspath(x)
+            print 'app_path: %s' % os.path.join(p, os.path.abspath(x))
             print '========================================'
 
 
