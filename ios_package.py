@@ -70,7 +70,7 @@ image_resource = os.path.join(config, 'ImageResources')
 
 resource = {config_json, app_icon}
 
-app_icon_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'AppIcon.appiconset')
+app_icon_dist = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'Assets.xcassets', 'AppIcon.appiconset')
 ipa_dist = os.path.join(parent_config , 'IPA')
 app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
 
@@ -342,6 +342,7 @@ def main():
 
     try:
         launch_image_make.copy(launch_image_dir, app_launch_image_dist, verbose)
+
     except Exception as e:
         print 'launch image exception: %s' % e.message
         raise e
