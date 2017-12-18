@@ -72,7 +72,7 @@ resource = {config_json, app_icon}
 
 app_icon_dist = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'Assets.xcassets', 'AppIcon.appiconset')
 ipa_dist = os.path.join(parent_config , 'IPA')
-app_launch_image_dist = os.path.join(source, 'URConfigFiles', 'Assets.xcassets', 'LaunchImage.launchimage')
+app_launch_image_dist = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
