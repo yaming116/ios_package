@@ -213,11 +213,11 @@ def get_provisioning_profile():
 
 def get_app_method():
     name = get_provisioning_profile()
-    if 'AD' in name:
+    if 'AD' in name  or 'Ad_Hoc' in name:
         return 'ad-hoc'
     if 'Universal' in name:
         return 'enterprise'
-    if 'Distribution' in name:
+    if 'Distribution' in name  or 'Dis' in name:
         return 'app-store'
     raise ValueError("证书命名出错，请包含 AD or Universal or Distribution")
 
@@ -248,7 +248,7 @@ def archive():
     global export_archive
     export_archive = '%s/build/Products/%s.xcarchive ' % (parent_config, name)
 
-    distribution =  get_team_name()
+    # distribution =  get_team_name()
 
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
     command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \

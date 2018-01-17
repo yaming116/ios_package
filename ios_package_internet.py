@@ -185,19 +185,18 @@ def get_provisioning_profile():
 
 def get_app_method():
     name = get_provisioning_profile()
-    if 'AD' in name:
+    if 'AD' in name  or 'Ad_Hoc' in name:
         return 'ad-hoc'
     if 'Universal' in name:
         return 'enterprise'
-    if 'Distribution' in name:
+    if 'Distribution' in name  or 'Dis' in name:
         return 'app-store'
     raise ValueError("证书命名出错，请包含 AD or Universal or Distribution")
 
 
-
-
 def get_team_name():
-    env = get_args_from_provision_file('Entitlements:aps-environment').strip()
+    # env = get_args_from_provision_file('Entitlements:aps-environment').strip()
+    env = 'product'
     team_name = get_args_from_provision_file('TeamName').strip()
     if 'development' == env:
         return 'iPhone Developer: %s' % team_name

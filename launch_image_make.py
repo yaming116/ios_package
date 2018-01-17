@@ -26,6 +26,9 @@ config = [{'idiom': 'iphone', 'subtype': '736h', 'filename': '1242-2208.png', 'm
           {'idiom': 'ipad', 'filename': '768-1024.png', 'minimum-system-version': '7.0', 'scale': '1x'},
           {'idiom': 'ipad', 'filename': '1536-2048.png', 'minimum-system-version': '7.0', 'scale': '2x'}]
 
+option = [{{'idiom': 'iphone', 'subtype': '243636h', 'filename': '1125-2436.png', 'minimum-system-version': '11.0', 'scale': '3x'}}
+          ]
+
 config_inter = [
     {'idiom': 'iphone', 'subtype': '736h', 'filename': '1242-2208.png', 'minimum-system-version': '8.0', 'scale': '3x'},
     {'idiom': 'iphone', 'subtype': '667h', 'filename': '750-1334.png', 'minimum-system-version': '8.0', 'scale': '2x'},
@@ -63,7 +66,13 @@ def copy(launch_image_dir, app_launch_image_dist, verbose=False, inter=False):
         launch['orientation'] = 'portrait'
         images.append(launch)
 
-
+    for launch in option:
+        p = path.join(launch_image_dir, launch['filename'])
+        if os.path.exists(p) :
+            shutil.copy(p, app_launch_image_dist)
+            launch['extent'] = 'full-screen'
+            launch['orientation'] = 'portrait'
+            images.append(launch)
 
     content = {'images': images, 'info': {'version': 1, 'author': 'xcode'}}
     json_content = json.dumps(content, indent=1)
