@@ -26,7 +26,7 @@ config = [{'idiom': 'iphone', 'subtype': '736h', 'filename': '1242-2208.png', 'm
           {'idiom': 'ipad', 'filename': '768-1024.png', 'minimum-system-version': '7.0', 'scale': '1x'},
           {'idiom': 'ipad', 'filename': '1536-2048.png', 'minimum-system-version': '7.0', 'scale': '2x'}]
 
-option = [{{'idiom': 'iphone', 'subtype': '243636h', 'filename': '1125-2436.png', 'minimum-system-version': '11.0', 'scale': '3x'}}
+option = [{'idiom': 'iphone', 'subtype': '2436h', 'filename': '1125-2436.png', 'minimum-system-version': '11.0', 'scale': '3x'}
           ]
 
 config_inter = [
