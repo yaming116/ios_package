@@ -34,12 +34,14 @@ parser.add_argument('--password', dest='password', help='os password')
 parser.add_argument('--name', dest='name', help='project name')
 parser.add_argument('--config', dest='config', help='ios config path', required=True)
 parser.add_argument('-test', '--test', dest='test', action='store_true' , help='test ipa build')
+parser.add_argument('-debug', '--debug', dest='debug', action='store_true' , help='test ipa for debug')
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Print verbose logging.')
 
 args = parser.parse_args()
 
 verbose = args.verbose or False
 test = args.test or False
+debug = args.debug or False
 parent_config = os.path.abspath(args.config)
 source = os.path.abspath(args.source)
 password = args.password
@@ -251,10 +253,13 @@ def archive():
     # distribution =  get_team_name()
 
     shutil.rmtree(os.path.join(parent_config, 'build'), True)
-    command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration Release ' \
+    conf = 'Release'
+    if debug:
+        conf = 'Debug'
+    command = 'xcodebuild clean archive -workspace %s -scheme  %s -configuration %s ' \
               '-derivedDataPath %s/build -archivePath %s  ' \
               'PROVISIONING_PROFILE_SPECIFIER=%s DEVELOPMENT_TEAM=%s | xcpretty' % \
-              (xcworkspace, name, parent_config, export_archive, get_provisioning_profile(),
+              (xcworkspace, name, conf, parent_config, export_archive, get_provisioning_profile(),
                get_team_identifier())
     if verbose:
         print 'build xcworkspace: %s' % xcworkspace
