@@ -246,7 +246,7 @@ def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
 
         # 最低支持版本
         pattern = r'\bIPHONEOS_DEPLOYMENT_TARGET\b\s=.*'
-        value = 'IPHONEOS_DEPLOYMENT_TARGET = 8.0;';
+        value = 'IPHONEOS_DEPLOYMENT_TARGET = 9.0;';
         data = re.sub(pattern, value, data)
 
         pattern = r'\bPROVISIONING_PROFILE_SPECIFIER\b\s=.*'
