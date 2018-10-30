@@ -412,7 +412,7 @@ def main():
         raise e
 
     try:
-        update_config.cp_welcome(json_config_data['option'], config_header, config_welcome_image, app_dist, verbose)
+        update_config.cp_welcome(json_config_data['option'], config_header, app_dist, config_welcome_image, verbose)
     except Exception as e:
         print '配置启动页失败 %s' % e.message
         raise e

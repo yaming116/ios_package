@@ -175,31 +175,61 @@ def update_plist_option(options, plist_path, source, resource, verbose):
         print 'not found HEAD_IMG'
         update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)
 
-guide_file_names = ['URGuidePage1.png' , 'URGuidePage2.png'
-    , 'URGuidePage3.png', 'URGuidePage4.png'
-    , 'URGuidePage5.png']
+guide_file_names = ['URGuidePage0.png' , 'URGuidePage1.png'
+    , 'URGuidePage2.png', 'URGuidePage3.png'
+    , 'URGuidePage4.png']
 
+guide_file_dir = ['URGuidePage0.imageset' , 'URGuidePage1.imageset'
+    , 'URGuidePage2.imageset', 'URGuidePage3.imageset'
+    , 'URGuidePage4.imageset']
+
+content = {"images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "URGuidePage0.png",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],'info': {'version': 1, 'author': 'xcode'}}
 
 def cp_welcome(options, header_path, source, resource, verbose):
     data = {}
     if options.has_key('GUIDE') and options['GUIDE']:
-        data.URGuidePageHUDSwitch = 'OPEN'
+        data['URGuidePageHUDSwitch'] = 'OPEN'
     else:
         return
 
     files = os.listdir(resource)
     count = len(files)
-    data.URGuidePageHUDImageNumString = count
+    data['URGuidePageHUDImageNumString'] = count
     # update header config
     update_header(data, header_path, False, verbose)
 
     index = 0
     for f in files:
         p = path.join(resource, f)
-        s = path.join(source, guide_file_names[index])
+        s = path.join(source, guide_file_dir[index])
+        if not path.exists(s):
+            os.makedirs(s)
+        real_file = path.join(s ,guide_file_names[index])
         index = index + 1
         if os.path.exists(p):
-            shutil.copyfile(p, s)
+            shutil.copyfile(p, real_file)
+
+        json_content = json.dumps(content, indent=1)
+        content.get('images')[0]['filename'] = guide_file_names[index]
+        if verbose:
+            print "image json content: %s" % json_content
+
+        with open(os.path.join(s, 'Contents.json'), mode='w') as icon_content:
+            icon_content.write(json_content)
 
 
 def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
@@ -353,9 +383,13 @@ if __name__ == '__main__':
     # update_header(json['header'], 'temp/TencentConfig.h', False, True)
     # update_plist_key('HomeTitleIcon', 'true', 'a', True)
 
-    a = json.loads('{"HEAD_IMG": true}', encoding='utf-8')
-    update_plist_option(a, '', True)
+    # print content
+    #
+    # content.get('images')[0]['filename'] = 'xxxx'
+    # print content
 
+    p = path.join('.', 'aa' ,'vvv.png')
+    os.makedirs(p)
 
 
 
