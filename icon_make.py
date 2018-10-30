@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import shutil
+import os.path as path
 
 ICON_NAME = 'icon_%sx%s.png'
 
@@ -60,8 +61,9 @@ def make(verbose, app_icon, app_icon_1024, app_icon_dist):
         except Exception as e:
             raise e
     #添加1024icon
-    shutil.copy(app_icon_1024, app_icon_dist)
-    images.append({'size': ('%sx%s' % (1024, 1024)), 'idiom': "ios-marketing", 'filename': 'AppIcon1024x1024.png', 'scale': '1x'})
+    if path.exists(app_icon_1024):
+        shutil.copy(app_icon_1024, app_icon_dist)
+        images.append({'size': ('%sx%s' % (1024, 1024)), 'idiom': "ios-marketing", 'filename': 'AppIcon1024x1024.png', 'scale': '1x'})
 
     content = {'images': images, 'info': {'version': 1, 'author': 'xcode'}}
     json_content = json.dumps(content, indent=1)

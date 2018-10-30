@@ -66,15 +66,17 @@ if verbose:
 app_icon = os.path.join(config, 'AppIcon', 'AppIcon60x60@3x.png')
 app_icon_1024 = os.path.join(config, 'AppIcon', 'AppIcon1024x1024.png')
 config_json = os.path.join(config, 'config.json')
+config_welcome_image = os.path.join(config, 'welcome_imgs')
 launch_image_dir = os.path.join(config, 'LaunchImage')
 image_resource = os.path.join(config, 'ImageResources')
 
 
 resource = {config_json, app_icon}
 
-app_icon_dist = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'Assets.xcassets', 'AppIcon.appiconset')
+app_dist = os.path.join(source, name, name, 'Assets.xcassets')
+app_icon_dist = os.path.join(source, name, name, 'Assets.xcassets', 'AppIcon.appiconset')
 ipa_dist = os.path.join(parent_config , 'IPA')
-app_launch_image_dist = os.path.join(source, 'RubikU-Popular', 'RubikU-Popular', 'Assets.xcassets', 'LaunchImage.launchimage')
+app_launch_image_dist = os.path.join(source, name, name, 'Assets.xcassets', 'LaunchImage.launchimage')
 
 app_bundle_dist = os.path.join(source, 'URConfigFiles', 'URConfigResource.bundle')
 app_image_folder_dist = os.path.join(app_bundle_dist, 'Images')
@@ -407,6 +409,12 @@ def main():
         update_config.update_header(json_config_data[header_key], config_header, test, verbose)
     except Exception as e:
         print 'update header file fail: %s' % e.message
+        raise e
+
+    try:
+        update_config.cp_welcome(json_config_data['option'], config_header, config_welcome_image, app_dist, verbose)
+    except Exception as e:
+        print '配置启动页失败 %s' % e.message
         raise e
 
     try:

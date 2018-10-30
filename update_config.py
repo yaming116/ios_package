@@ -6,11 +6,14 @@
 
 import subprocess
 import re
+import shutil
 import utils.utils as tools
 import codecs
 import sys
 import json
 import icon_make
+import os
+from os import path
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -171,6 +174,32 @@ def update_plist_option(options, plist_path, source, resource, verbose):
     else:
         print 'not found HEAD_IMG'
         update_plist_key('HomeTitleIcon', 'false', plist_path, verbose)
+
+guide_file_names = ['URGuidePage1.png' , 'URGuidePage2.png'
+    , 'URGuidePage3.png', 'URGuidePage4.png'
+    , 'URGuidePage5.png']
+
+
+def cp_welcome(options, header_path, source, resource, verbose):
+    data = {}
+    if options.has_key('GUIDE') and options['GUIDE']:
+        data.URGuidePageHUDSwitch = 'OPEN'
+    else:
+        return
+
+    files = os.listdir(resource)
+    count = len(files)
+    data.URGuidePageHUDImageNumString = count
+    # update header config
+    update_header(data, header_path, False, verbose)
+
+    index = 0
+    for f in files:
+        p = path.join(resource, f)
+        s = path.join(source, guide_file_names[index])
+        index = index + 1
+        if os.path.exists(p):
+            shutil.copyfile(p, s)
 
 
 def update_pbxproj(path, bundle_id, team_id, name, uuid, verbose):
